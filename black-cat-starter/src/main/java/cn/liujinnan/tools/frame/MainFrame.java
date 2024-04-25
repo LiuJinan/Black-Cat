@@ -2,7 +2,7 @@
  * copyright(c) 2024 by liujinnan.cn All rights Reserved.
  */
 
-package cn.liujinnan.tools.black.cat.frame;
+package cn.liujinnan.tools.frame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,6 @@ public class MainFrame {
 //        }
 
         jf.setVisible(true);
-
 
     }
 }
