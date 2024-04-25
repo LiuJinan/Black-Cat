@@ -1,5 +1,5 @@
 /*
- * opyright(c) 2024 by liujinnan.cn All rights Reserved.
+ * copyright(c) 2024 by liujinnan.cn All rights Reserved.
  */
 
 package cn.liujinnan.tools.black.cat;
