@@ -5,10 +5,13 @@ package cn.liujinnan.tools.utils;
 
 import cn.liujinnan.tools.constant.PropertiesEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -21,7 +24,30 @@ import java.util.Properties;
 @Slf4j
 public class PropertiesUtils {
 
-    private static final String PROPERTIES_FILE = "/application.properties";
+    /**
+     * 配置文件后缀
+     */
+    private static final String PROPERTIES_SUFFIX = ".properties";
+
+    /**
+     * 配种文件名称
+     */
+    private static final String PROPERTIES_FILE = "application" + PROPERTIES_SUFFIX;
+
+    /**
+     * jar文件后缀
+     */
+    private static final String JAR_SUFFIX = ".jar";
+
+    /**
+     * 配置文件夹名称
+     */
+    private static final String CONFIG_FOLDER_NAME = "config";
+
+    /**
+     * 语言配置文件夹。 config/language/zh_cn.properties
+     */
+    private static final String LANGUAGE_FOLDER_NAME = "language";
 
     /**
      * 单例饿汉
@@ -40,19 +66,13 @@ public class PropertiesUtils {
 
     private void init(){
         log.info("load all config start..........");
-        String outPath = PropertiesUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        // outPath = 打包的jar所在目录
-        outPath = outPath.substring(0, outPath.lastIndexOf("/"));
+        // 配种文件目录
         try {
             // 加载主配置
-            loadProperties(outPath);
+            loadProperties();
             // 加载语言配置
-            loadLanguageProperties(outPath,PROPERTIES.getProperty(PropertiesEnum.LANGUAGE.getKey()));
-            if (log.isDebugEnabled()) {
-                PROPERTIES.stringPropertyNames().forEach(key ->{
-                    log.debug("config: {}={}", key, PROPERTIES.getProperty(key));
-                });
-            }
+            loadLanguageProperties();
+
             log.info("load all config done..........");
         } catch (Exception e) {
             log.error("加载配置失败", e);
@@ -65,47 +85,66 @@ public class PropertiesUtils {
 
     /**
      * 加载主配置
-     * @param outPath 项目根目录，用于获取外置的配置文件
      * @throws IOException
      */
-    private void loadProperties(String outPath) throws IOException{
+    private void loadProperties() throws IOException{
         // 加载项目中的默认配置文件
-        PROPERTIES.load(PropertiesUtils.class.getResourceAsStream(PROPERTIES_FILE));
-        log.info("load config file {} done ", PROPERTIES_FILE);
+        URL configUrl = Objects.requireNonNull(this.getClass().getResource("/" + PROPERTIES_FILE));
+        PROPERTIES.load(configUrl.openStream());
+        log.info("load config file [{}] done ", configUrl.getPath());
 
-        // 项目外的配置文件 jar所在目录/config/name.properties
-        String outConfigFile = outPath+"/config"+ PROPERTIES_FILE;
-        File file = new File(outConfigFile);
-        if (file.exists()){
-            try(FileInputStream fileInputStream = new FileInputStream(file);) {
-                PROPERTIES.load(fileInputStream);
-            }
-            log.info("load config file {} done", outConfigFile);
+        if (!configUrl.getPath().contains(JAR_SUFFIX)){
+            return;
         }
+
+        // 外置配置文件绝对路径
+        String outConfigFilePath = getJarConfigFolder() + PROPERTIES_FILE;
+        File file = new File(outConfigFilePath);
+        if (!file.exists()){
+            return;
+        }
+        PROPERTIES.load(new FileReader(file));
+        log.info("load config file [{}] done ", outConfigFilePath);
     }
 
     /**
      * 加载语言配置
-     * @param outPath 项目根目录，用于获取外置的配置文件
-     * @param language
      */
-    private void loadLanguageProperties(String outPath, String language) throws IOException{
-        // 语言文件名称
-        String languageFileName = language + ".properties";
+    private void loadLanguageProperties() throws IOException{
 
+        // 语言文件名称
+        String languageFileName = PROPERTIES.getProperty(PropertiesEnum.LANGUAGE.getKey(), "zh_cn") + PROPERTIES_SUFFIX;
         // 加载项目内置语言配置文件
-        PROPERTIES.load(PropertiesUtils.class.getResourceAsStream(languageFileName));
-        log.info("load config file {} done ", languageFileName);
+        URL languageUrl = Objects.requireNonNull(this.getClass().getResource("/" + LANGUAGE_FOLDER_NAME + "/" + languageFileName));
+        PROPERTIES.load(languageUrl.openStream());
+        log.info("load config file {{}} done ", languageUrl.getPath());
+
+        if (!languageUrl.getPath().contains(JAR_SUFFIX)){
+            return;
+        }
 
         // 加载外置的配置文件
-        String outLanguageConfigFile = outPath + "/config/" + languageFileName;
-        File file = new File(outLanguageConfigFile);
-        if (file.exists()){
-            try(FileInputStream fileInputStream = new FileInputStream(file);) {
-                PROPERTIES.load(fileInputStream);
-            }
-            log.info("load config file {} done", outLanguageConfigFile);
+        String outLanguageConfigFilePath = getJarConfigFolder()  + LANGUAGE_FOLDER_NAME + File.separator + languageFileName;
+        File file = new File(outLanguageConfigFilePath);
+        if (!file.exists()){
+            return;
         }
+        PROPERTIES.load(new FileReader(file));
+        log.info("load config file [{}] done ", outLanguageConfigFilePath);
+    }
+
+    /**
+     * jar方式运行时，获取配置文件目录
+     * @return
+     */
+    public String getJarConfigFolder(){
+
+        // /绝对路径/xxx.jar
+        String jarPath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        if (StringUtils.isBlank(jarPath) || !jarPath.contains(JAR_SUFFIX)){
+            return CONFIG_FOLDER_NAME + File.separator;
+        }
+        return new File(jarPath).getParent() + File.separator + CONFIG_FOLDER_NAME + File.separator;
     }
 
     public String getValue(String propertiesKey) {

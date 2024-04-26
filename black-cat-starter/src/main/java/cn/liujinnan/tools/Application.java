@@ -5,6 +5,7 @@
 package cn.liujinnan.tools;
 
 import cn.liujinnan.tools.frame.MainFrame;
+import cn.liujinnan.tools.utils.PropertiesUtils;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class Application {
 
     public static void main(String[] args) throws Exception{
         UIManager.setLookAndFeel(new FlatMacLightLaf());
+        PropertiesUtils instance = PropertiesUtils.getInstance();
         MainFrame.showMainFrame();
     }
 }
