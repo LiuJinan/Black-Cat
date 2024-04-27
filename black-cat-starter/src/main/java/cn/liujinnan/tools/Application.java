@@ -19,7 +19,6 @@ public class Application {
 
     public static void main(String[] args) throws Exception{
         UIManager.setLookAndFeel(new FlatMacLightLaf());
-        PropertiesUtils instance = PropertiesUtils.getInstance();
         MainFrame.showMainFrame();
     }
 }

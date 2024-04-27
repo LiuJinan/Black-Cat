@@ -4,6 +4,12 @@
 
 package cn.liujinnan.tools.frame;
 
+import cn.liujinnan.tools.constant.PropertiesEnum;
+import cn.liujinnan.tools.ext.plugin.Plugin;
+import cn.liujinnan.tools.plugin.PluginClassLoader;
+import cn.liujinnan.tools.utils.PropertiesUtils;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,6 +18,7 @@ import java.awt.*;
  * @version 1.0
  * @date 2024-04-25 16:51
  */
+@Slf4j
 public class MainFrame {
 
     private static final int MAINFRAME_WIDTH = 600;
@@ -22,13 +29,20 @@ public class MainFrame {
      * 显示主窗口
      */
     public static void showMainFrame(){
+
+        PropertiesUtils instance = PropertiesUtils.getInstance();
+
+
         JFrame jf = new JFrame("Black-Cat");
         // 设置窗口大小
-        jf.setSize(MAINFRAME_WIDTH, MAINFRAME_HEIGHT);
+        Integer width = instance.getIntValue(PropertiesEnum.WINDOW_WIDTH.getKey());
+        Integer height = instance.getIntValue(PropertiesEnum.WINDOW_HEIGHT.getKey());
+        jf.setSize(width, height);
         // 把窗口位置设置到屏幕中心
         jf.setLocationRelativeTo(null);
-        // 当点击窗口的关闭按钮时退出程序（没有这一句，程序不会退出）
+        // 当点击窗口的关闭按钮时退出程序
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jf.setVisible(true);
 
         Toolkit kit = Toolkit.getDefaultToolkit();
         Image image = kit.getImage(MainFrame.class.getResource("/logo.png"));
@@ -37,7 +51,24 @@ public class MainFrame {
         // 创建选项卡
         JTabbedPane tabbedPane = new JTabbedPane();
         jf.setContentPane(tabbedPane);
-        tabbedPane.addTab("aa", new JPanel());
+        JPanel jPanel = new JPanel();
+        jPanel.add(new JButton("aa测试"));
+        tabbedPane.addTab("aa", jPanel);
+
+        try {
+            PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("C:\\Users\\74098\\Desktop\\jar\\black-cat-plugin-v1.jar");
+            PluginClassLoader v2 = PluginClassLoader.createPluginClassLoader("C:\\Users\\74098\\Desktop\\jar\\black-cat-plugin-v2.jar");
+            Class<?> v1Class = v1.loadClass("cn.liujinnan.tools.Test");
+            Class<?> v2Class = v2.loadClass("cn.liujinnan.tools.Test");
+//            v1Class.en
+            Plugin v1P = (Plugin)v1Class.getDeclaredConstructor().newInstance();
+            Plugin v2P = (Plugin)v2Class.getDeclaredConstructor().newInstance();
+            tabbedPane.addTab("v1", v1P.getJComponent());
+            tabbedPane.addTab("v2", v2P.getJComponent());
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
 //        Map<String, Tab> map = TabAnnotationUtil.getTabMap(MainFrame.class);
 //        for (Map.Entry<String, Tab> entry : map.entrySet()) {
 //            try {
@@ -47,7 +78,6 @@ public class MainFrame {
 //            }
 //        }
 
-        jf.setVisible(true);
 
     }
 }

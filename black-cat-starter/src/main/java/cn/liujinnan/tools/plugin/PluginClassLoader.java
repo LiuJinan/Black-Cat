@@ -43,6 +43,8 @@ public class PluginClassLoader extends URLClassLoader {
 
     public PluginJarInfo getPluginJarInfo() {
 
+        URL resource = this.getClass().getClassLoader().getResource("plugin.properties");
+//        resource.openStream()
 
 
         return null;
