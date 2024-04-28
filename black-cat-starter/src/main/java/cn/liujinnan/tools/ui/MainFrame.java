@@ -7,6 +7,7 @@ package cn.liujinnan.tools.ui;
 import cn.liujinnan.tools.constant.PropertiesEnum;
 import cn.liujinnan.tools.ext.plugin.Plugin;
 import cn.liujinnan.tools.plugin.PluginClassLoader;
+import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,10 +21,6 @@ import java.awt.*;
  */
 @Slf4j
 public class MainFrame {
-
-    private static final int MAINFRAME_WIDTH = 600;
-
-    private static final int MAINFRAME_HEIGHT = 600;
 
     /**
      * 显示主窗口
@@ -53,10 +50,12 @@ public class MainFrame {
         jf.setContentPane(tabbedPane);
         JPanel jPanel = new JPanel();
         jPanel.add(new JButton("aa测试"));
-        tabbedPane.addTab("aa", jPanel);
+        String path = MainFrame.class.getResource("/info.png").getPath();
+        tabbedPane.addTab("aa", new ImageIcon(path), jPanel);
         tabbedPane.setTabPlacement(JTabbedPane.LEFT);
 
         try {
+            PluginManager pluginManager = PluginManager.getInstance();
             PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("D:\\plugin\\black-cat-plugin.jar");
             Class<?> v1Class = v1.loadClass("cn.liujinnan.tools.Test");
             Plugin v1P = (Plugin)v1Class.getDeclaredConstructor().newInstance();
