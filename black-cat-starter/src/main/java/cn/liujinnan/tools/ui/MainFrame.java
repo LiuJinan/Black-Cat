@@ -2,7 +2,7 @@
  * copyright(c) 2024 by liujinnan.cn All rights Reserved.
  */
 
-package cn.liujinnan.tools.frame;
+package cn.liujinnan.tools.ui;
 
 import cn.liujinnan.tools.constant.PropertiesEnum;
 import cn.liujinnan.tools.ext.plugin.Plugin;
@@ -54,17 +54,13 @@ public class MainFrame {
         JPanel jPanel = new JPanel();
         jPanel.add(new JButton("aa测试"));
         tabbedPane.addTab("aa", jPanel);
+        tabbedPane.setTabPlacement(JTabbedPane.LEFT);
 
         try {
-            PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("C:\\Users\\74098\\Desktop\\jar\\black-cat-plugin-v1.jar");
-            PluginClassLoader v2 = PluginClassLoader.createPluginClassLoader("C:\\Users\\74098\\Desktop\\jar\\black-cat-plugin-v2.jar");
+            PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("D:\\plugin\\black-cat-plugin.jar");
             Class<?> v1Class = v1.loadClass("cn.liujinnan.tools.Test");
-            Class<?> v2Class = v2.loadClass("cn.liujinnan.tools.Test");
-//            v1Class.en
             Plugin v1P = (Plugin)v1Class.getDeclaredConstructor().newInstance();
-            Plugin v2P = (Plugin)v2Class.getDeclaredConstructor().newInstance();
             tabbedPane.addTab("v1", v1P.getJComponent());
-            tabbedPane.addTab("v2", v2P.getJComponent());
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -77,7 +73,9 @@ public class MainFrame {
 //                tabbedPane.addTab("Error:"+entry.getKey(), new ErrorTab(e).getTab());
 //            }
 //        }
-
+        JPanel setting = new JPanel();
+//        setting.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        tabbedPane.addTab("设置", setting);
 
     }
 }
