@@ -7,12 +7,13 @@ package cn.liujinnan.tools.plugin;
 import cn.liujinnan.tools.constant.PropertiesEnum;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.PropertiesUtils;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @description: jar 插件管理
@@ -26,6 +27,8 @@ public class PluginManager {
      * 单例
      */
     private static final PluginManager PLUGINMANAGER = new PluginManager();
+
+    private final Map<String, PluginClassLoader> pluginClassLoaderMap = Maps.newTreeMap();
 
     private PluginManager() {
         reloadPlugin();
@@ -51,19 +54,23 @@ public class PluginManager {
         Optional.ofNullable(pluginDirectory.listFiles()).ifPresent((fileArrays)->{
             // 过滤只加载jar文件
             Arrays.stream(fileArrays).filter(e -> e.getName().contains(".jar")).forEach(jarFile -> {
+                String jarFilePath = jarFile.getAbsolutePath();
                 try {
-                    String jarFilePath = jarFile.getAbsolutePath();
                     PluginClassLoader classLoader = PluginClassLoader.createPluginClassLoader(jarFilePath);
                     PluginJarInfo pluginJarInfo = classLoader.getPluginJarInfo();
+                    pluginClassLoaderMap.put(pluginJarInfo.getJarName(), classLoader);
                     // todo 加载插件
                     log.info("load plugin success. path={}", jarFilePath);
                 } catch (Exception e) {
-
+                    log.info("load plugin error. path={}", jarFilePath);
                 }
             });
-
         });
 
+    }
+
+    public List<PluginClassLoader> getPluginClassLoaderList() {
+        return new ArrayList<>(pluginClassLoaderMap.values());
     }
 
     public static PluginManager getInstance() {

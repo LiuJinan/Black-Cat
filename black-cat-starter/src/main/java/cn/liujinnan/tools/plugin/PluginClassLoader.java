@@ -1,37 +1,48 @@
 package cn.liujinnan.tools.plugin;
 
+import cn.liujinnan.tools.ext.plugin.Plugin;
+import cn.liujinnan.tools.ext.plugin.annotation.PluginComponent;
+import cn.liujinnan.tools.ext.plugin.constant.PluginPropertiesEnum;
+import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
+import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.Properties;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 /**
- * todo 加载配置
  * 插件类加载器
+ *
  * @author liujinnan
  */
+@Getter
+@Slf4j
 public class PluginClassLoader extends URLClassLoader {
 
     private static final String JAR_SUFFIX = ".jar";
 
-    private String jarFilePath;
+    private static final String CLASS_SUFFIX = ".class";
 
-    private PluginClassLoader(String name, URL[] urls, ClassLoader parent, String jarFilePath) {
+    private PluginJarInfo pluginJarInfo;
+
+    private PluginClassLoader(String name, URL[] urls, ClassLoader parent, String jarFilePath) throws Exception{
         super(name, urls, parent);
-        this.jarFilePath = jarFilePath;
+        reloadPluginJarInfo(jarFilePath);
     }
 
     /**
      * 创建类名
+     *
      * @param jarFilePath jar包文件路径，绝对路径。 绝对路径/xxx.jar
      * @return
      */
@@ -50,26 +61,85 @@ public class PluginClassLoader extends URLClassLoader {
         return new PluginClassLoader(file.getName(), urls, getSystemClassLoader(), jarFilePath);
     }
 
-    public PluginJarInfo getPluginJarInfo() throws Exception{
+    /**
+     * 加载插件信息
+     * @param jarFilePath
+     * @return
+     */
+    private void reloadPluginJarInfo(String jarFilePath) throws Exception{
 
-        PluginJarInfo pluginJarInfo = new PluginJarInfo();
-        Properties properties = new Properties();
-        try(JarFile jarFile = new JarFile(jarFilePath)) {
+        pluginJarInfo = new PluginJarInfo();
+        pluginJarInfo.setJarPath(jarFilePath);
+        List<PluginItem> pluginItemList = Lists.newArrayList();
+        pluginJarInfo.setPluginItemList(pluginItemList);
+        try (JarFile jarFile = new JarFile(jarFilePath)) {
+            pluginJarInfo.setJarName(jarFile.getName());
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
-                System.out.println(jarEntry.getName());
-                if (StringUtils.equals(jarEntry.getName(), "plugin.properties")){
-                    InputStream inputStream = jarFile.getInputStream(jarEntry);
-                    properties.load(inputStream);
+                if (StringUtils.equals(jarEntry.getName(), "plugin.properties")) {
+                    loadPluginProperties(jarFile.getInputStream(jarEntry), pluginJarInfo);
+                    continue;
                 }
+                Optional.ofNullable(checkAndGetPluginClass(jarEntry.getName()))
+                        .ifPresent(pluginItemList::add);
             }
+            if (pluginItemList.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+        } catch (IOException e) {
+            // todo 日志打印
+            throw new RuntimeException(e);
         }
+    }
 
-        properties.keySet().forEach(key -> {
-            System.out.println(key +" : " + properties.get(key));
-        });
+    private void loadPluginProperties(InputStream inputStream, PluginJarInfo pluginJarInfo) {
+        try {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            // 插件配置
+            String author = properties.getProperty(PluginPropertiesEnum.PLUGIN_AUTHOR.getKey(), PluginPropertiesEnum.PLUGIN_AUTHOR.getDefaultValue());
+            pluginJarInfo.setAuthor(author);
+            String version = properties.getProperty(PluginPropertiesEnum.PLUGIN_VERSION.getKey(), PluginPropertiesEnum.PLUGIN_VERSION.getDefaultValue());
+            pluginJarInfo.setVersion(version);
+            log.info("load plugin config success. pluginName={}", pluginJarInfo.getJarName());
+        } catch (Exception e) {
+            log.error("load plugin config error. pluginName={}", pluginJarInfo.getJarName(), e);
+        }
+    }
 
+    /**
+     * 检查当前文件为plugin class则返回
+     *
+     * @param jarEntryName
+     * @return
+     */
+    private PluginItem checkAndGetPluginClass(String jarEntryName) {
+        if (StringUtils.isBlank(jarEntryName) || !jarEntryName.contains(CLASS_SUFFIX)) {
+            // 非class文件跳过
+            return null;
+        }
+        try {
+            // jarEntryName 格式 cn/liujinnan/tools/Test.class
+            String className = jarEntryName.replaceAll("/", ".").replace(CLASS_SUFFIX, "");
+            Class<?> aClass = this.loadClass(className);
+            PluginComponent pluginComponent = aClass.getAnnotation(PluginComponent.class);
+            if (Objects.nonNull(pluginComponent)) {
+                Object obj = aClass.getDeclaredConstructor().newInstance();
+                if (!(obj instanceof Plugin)) {
+                    return null;
+                }
+                PluginItem pluginItem = new PluginItem();
+                pluginItem.setClassName(className);
+                pluginItem.setSimpleClassName(aClass.getSimpleName());
+                pluginItem.setComponentName(pluginComponent.name());
+                pluginItem.setIconUrl(pluginComponent.icon());
+                pluginItem.setPlugin((Plugin) obj);
+                return pluginItem;
+            }
+        } catch (Exception e) {
+            log.error("load plugin class error. className={}", jarEntryName, e);
+        }
         return null;
     }
 }

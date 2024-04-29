@@ -4,6 +4,7 @@
 
 package cn.liujinnan.tools.plugin.domain;
 
+import cn.liujinnan.tools.ext.plugin.Plugin;
 import lombok.Data;
 
 /**
@@ -34,5 +35,7 @@ public class PluginItem {
      * 图标
      */
     private String iconUrl;
+
+    private Plugin plugin;
 
 }

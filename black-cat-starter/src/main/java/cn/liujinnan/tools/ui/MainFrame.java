@@ -5,14 +5,16 @@
 package cn.liujinnan.tools.ui;
 
 import cn.liujinnan.tools.constant.PropertiesEnum;
-import cn.liujinnan.tools.ext.plugin.Plugin;
 import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
+import cn.liujinnan.tools.plugin.domain.PluginItem;
+import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author ljn
@@ -56,23 +58,23 @@ public class MainFrame {
 
         try {
             PluginManager pluginManager = PluginManager.getInstance();
-//            PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("D:\\plugin\\black-cat-plugin.jar");
-//            Class<?> v1Class = v1.loadClass("cn.liujinnan.tools.Test");
-//            v1.getPluginJarInfo();
-//            Plugin v1P = (Plugin)v1Class.getDeclaredConstructor().newInstance();
-//            tabbedPane.addTab("v1", v1P.getJComponent());
+            List<PluginClassLoader> pluginClassLoaderList = pluginManager.getPluginClassLoaderList();
+            pluginClassLoaderList.forEach(pluginClassLoader -> {
+                try {
+                    PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
+                    List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
+                    pluginItemList.forEach(pluginItem -> {
+                        tabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
+                    });
+                } catch (Exception e) {
+
+                }
+            });
+
         } catch (Exception e) {
 
             e.printStackTrace();
         }
-//        Map<String, Tab> map = TabAnnotationUtil.getTabMap(MainFrame.class);
-//        for (Map.Entry<String, Tab> entry : map.entrySet()) {
-//            try {
-//                tabbedPane.addTab(entry.getKey(), entry.getValue().getTab());
-//            } catch (Exception e) {
-//                tabbedPane.addTab("Error:"+entry.getKey(), new ErrorTab(e).getTab());
-//            }
-//        }
         JPanel setting = new JPanel();
 //        setting.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         tabbedPane.addTab("设置", setting);

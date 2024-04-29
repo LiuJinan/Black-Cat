@@ -59,6 +59,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>33.1.0-jre</version>
+            </dependency>
+
+            <dependency>
                 <groupId>cn.liujinnan.tools</groupId>
                 <artifactId>black-cat-plugin</artifactId>
                 <version>1.0.0</version>

@@ -47,6 +47,11 @@
             <artifactId>logback-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
         <!-- 插件 -->
         <dependency>
             <groupId>cn.liujinnan.tools</groupId>
