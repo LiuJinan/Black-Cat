@@ -14,5 +14,25 @@ import lombok.Data;
 @Data
 public class PluginItem {
 
+    /**
+     * 全限定类名, 包含包路径。例：cn.liujinnan.tools.plugin.domain。PluginItem
+     */
+    private String className;
+
+    /**
+     * 类名
+     */
+    private String simpleClassName;
+
+    /**
+     * 组件名称.
+     * @PluginComponent.name
+     */
+    private String componentName;
+
+    /**
+     * 图标
+     */
+    private String iconUrl;
 
 }

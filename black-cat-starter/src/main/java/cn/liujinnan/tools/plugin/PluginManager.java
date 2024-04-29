@@ -5,6 +5,7 @@
 package cn.liujinnan.tools.plugin;
 
 import cn.liujinnan.tools.constant.PropertiesEnum;
+import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +53,8 @@ public class PluginManager {
             Arrays.stream(fileArrays).filter(e -> e.getName().contains(".jar")).forEach(jarFile -> {
                 try {
                     String jarFilePath = jarFile.getAbsolutePath();
-                    PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader(jarFilePath);
+                    PluginClassLoader classLoader = PluginClassLoader.createPluginClassLoader(jarFilePath);
+                    PluginJarInfo pluginJarInfo = classLoader.getPluginJarInfo();
                     // todo 加载插件
                     log.info("load plugin success. path={}", jarFilePath);
                 } catch (Exception e) {

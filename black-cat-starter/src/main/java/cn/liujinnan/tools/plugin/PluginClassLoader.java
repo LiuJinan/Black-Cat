@@ -5,8 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  * todo 加载配置
@@ -17,8 +23,11 @@ public class PluginClassLoader extends URLClassLoader {
 
     private static final String JAR_SUFFIX = ".jar";
 
-    private PluginClassLoader(String name, URL[] urls, ClassLoader parent) {
+    private String jarFilePath;
+
+    private PluginClassLoader(String name, URL[] urls, ClassLoader parent, String jarFilePath) {
         super(name, urls, parent);
+        this.jarFilePath = jarFilePath;
     }
 
     /**
@@ -38,14 +47,28 @@ public class PluginClassLoader extends URLClassLoader {
         }
 
         urls = new URL[]{file.toURI().toURL()};
-        return new PluginClassLoader(file.getName(), urls, getSystemClassLoader());
+        return new PluginClassLoader(file.getName(), urls, getSystemClassLoader(), jarFilePath);
     }
 
-    public PluginJarInfo getPluginJarInfo() {
+    public PluginJarInfo getPluginJarInfo() throws Exception{
 
-        URL resource = this.getClass().getClassLoader().getResource("plugin.properties");
-//        resource.openStream()
+        PluginJarInfo pluginJarInfo = new PluginJarInfo();
+        Properties properties = new Properties();
+        try(JarFile jarFile = new JarFile(jarFilePath)) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry jarEntry = entries.nextElement();
+                System.out.println(jarEntry.getName());
+                if (StringUtils.equals(jarEntry.getName(), "plugin.properties")){
+                    InputStream inputStream = jarFile.getInputStream(jarEntry);
+                    properties.load(inputStream);
+                }
+            }
+        }
 
+        properties.keySet().forEach(key -> {
+            System.out.println(key +" : " + properties.get(key));
+        });
 
         return null;
     }

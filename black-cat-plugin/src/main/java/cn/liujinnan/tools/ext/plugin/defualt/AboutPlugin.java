@@ -14,7 +14,7 @@ import javax.swing.*;
  * @author: liujinnan
  * @create: 2024-04-26 01:23
  **/
-@PluginComponent(name = "about")
+@PluginComponent(name = "about", icon = "")
 public class AboutPlugin implements Plugin {
     @Override
     public JComponent getJComponent() {

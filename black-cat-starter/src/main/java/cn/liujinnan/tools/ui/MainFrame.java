@@ -50,16 +50,17 @@ public class MainFrame {
         jf.setContentPane(tabbedPane);
         JPanel jPanel = new JPanel();
         jPanel.add(new JButton("aa测试"));
-        String path = MainFrame.class.getResource("/info.png").getPath();
-        tabbedPane.addTab("aa", new ImageIcon(path), jPanel);
+//        String path = MainFrame.class.getResource("/info.png").getPath();
+//        tabbedPane.addTab("aa", new ImageIcon(path), jPanel);
         tabbedPane.setTabPlacement(JTabbedPane.LEFT);
 
         try {
             PluginManager pluginManager = PluginManager.getInstance();
-            PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("D:\\plugin\\black-cat-plugin.jar");
-            Class<?> v1Class = v1.loadClass("cn.liujinnan.tools.Test");
-            Plugin v1P = (Plugin)v1Class.getDeclaredConstructor().newInstance();
-            tabbedPane.addTab("v1", v1P.getJComponent());
+//            PluginClassLoader v1 = PluginClassLoader.createPluginClassLoader("D:\\plugin\\black-cat-plugin.jar");
+//            Class<?> v1Class = v1.loadClass("cn.liujinnan.tools.Test");
+//            v1.getPluginJarInfo();
+//            Plugin v1P = (Plugin)v1Class.getDeclaredConstructor().newInstance();
+//            tabbedPane.addTab("v1", v1P.getJComponent());
         } catch (Exception e) {
 
             e.printStackTrace();
