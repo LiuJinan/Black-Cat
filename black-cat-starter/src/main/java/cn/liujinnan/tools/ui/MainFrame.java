@@ -33,6 +33,10 @@ public class MainFrame {
 
 
         JFrame jf = new JFrame("Black-Cat");
+        JMenuBar jMenuBar = new JMenuBar();
+        jf.setJMenuBar(jMenuBar);
+        JMenu jMenu = new JMenu("file");
+        jMenuBar.add(jMenu);
         // 设置窗口大小
         Integer width = instance.getIntValue(PropertiesEnum.WINDOW_WIDTH.getKey());
         Integer height = instance.getIntValue(PropertiesEnum.WINDOW_HEIGHT.getKey());

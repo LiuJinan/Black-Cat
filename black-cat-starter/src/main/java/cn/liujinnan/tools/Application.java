@@ -26,6 +26,7 @@ public class Application {
 //        UIManager.put( "TabbedPane.selectedBackground", Color.white );
 //        UIManager.put( "TabbedPane.tabSeparatorsFullHeight", true );
         // https://www.formdev.com/flatlaf/themes/
+        System.setProperty("flatlaf.menuBarEmbedded", "true");
         IntelliJTheme.setup( Application.class.getResourceAsStream(
                 "/themes/RiderLight.theme.json" ) );
         MainFrame.showMainFrame();
