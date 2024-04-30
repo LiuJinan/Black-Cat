@@ -6,6 +6,7 @@ package cn.liujinnan.tools;
 
 import cn.liujinnan.tools.ui.MainFrame;
 import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
 
@@ -17,7 +18,8 @@ import javax.swing.*;
 public class Application {
 
     public static void main(String[] args) throws Exception{
-        UIManager.setLookAndFeel(new FlatDarculaLaf());
+//        UIManager.setLookAndFeel(new FlatDarculaLaf());
+        UIManager.setLookAndFeel(new FlatIntelliJLaf());
         MainFrame.showMainFrame();
     }
 }

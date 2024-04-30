@@ -48,36 +48,47 @@ public class MainFrame {
         jf.setIconImage(image);
 
         // 创建选项卡
-        JTabbedPane tabbedPane = new JTabbedPane();
-        jf.setContentPane(tabbedPane);
-        JPanel jPanel = new JPanel();
-        jPanel.add(new JButton("aa测试"));
+        JTabbedPane menu = new JTabbedPane();
+        menu.setTabPlacement(JTabbedPane.LEFT);
+        jf.setContentPane(menu);
 //        String path = MainFrame.class.getResource("/info.png").getPath();
 //        tabbedPane.addTab("aa", new ImageIcon(path), jPanel);
-        tabbedPane.setTabPlacement(JTabbedPane.LEFT);
+        JPanel home = new JPanel(new GridLayout(1, 2));
 
+        menu.addTab("主页", home);
+        JTabbedPane homeTabbedPane = new JTabbedPane();
+        homeTabbedPane.setTabPlacement(JTabbedPane.TOP);
+        homeTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        home.add(homeTabbedPane);
+
+        menu.addTab("帮助", new JPanel());
+        JPanel setting = new JPanel();
+        menu.addTab("设置", setting);
+//        menu.setSize(100,100);
+        menu.setFont(new Font(null, Font.PLAIN, 20));
+
+        showPluginItem(homeTabbedPane);
+    }
+
+    private static void showPluginItem(JTabbedPane homeTabbedPane) {
         try {
             PluginManager pluginManager = PluginManager.getInstance();
             List<PluginClassLoader> pluginClassLoaderList = pluginManager.getPluginClassLoaderList();
             pluginClassLoaderList.forEach(pluginClassLoader -> {
+                PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
                 try {
-                    PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
                     List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
                     pluginItemList.forEach(pluginItem -> {
-                        tabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
+                        // TODO: 2024/4/30 图标
+                        homeTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
+                        log.info("load : {}", pluginItem.getClassName());
                     });
                 } catch (Exception e) {
-
+                    log.error("load plugin item error. jar={}", pluginJarInfo.getJarName(), e);
                 }
             });
-
         } catch (Exception e) {
-
             e.printStackTrace();
         }
-        JPanel setting = new JPanel();
-//        setting.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        tabbedPane.addTab("设置", setting);
-
     }
 }

@@ -38,6 +38,7 @@ public class PluginManager {
      * 加载插件jar
      */
     public void reloadPlugin() {
+        pluginClassLoaderMap.clear();
         PropertiesUtils instance = PropertiesUtils.getInstance();
         String pluginPath = instance.getValue(PropertiesEnum.BLACK_CAT_PLUGIN_PATH.getKey());
         if (StringUtils.isBlank(pluginPath)) {
