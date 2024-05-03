@@ -10,6 +10,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,8 +21,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  * 插件类加载器
@@ -73,7 +79,8 @@ public class PluginClassLoader extends URLClassLoader {
         List<PluginItem> pluginItemList = Lists.newArrayList();
         pluginJarInfo.setPluginItemList(pluginItemList);
         try (JarFile jarFile = new JarFile(jarFilePath)) {
-            pluginJarInfo.setJarName(jarFile.getName());
+
+            pluginJarInfo.setJarName(new File(jarFile.getName()).getName());
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
@@ -81,7 +88,7 @@ public class PluginClassLoader extends URLClassLoader {
                     loadPluginProperties(jarFile.getInputStream(jarEntry), pluginJarInfo);
                     continue;
                 }
-                Optional.ofNullable(checkAndGetPluginClass(jarEntry.getName()))
+                Optional.ofNullable(checkAndGetPluginClass(jarEntry.getName(),jarFile))
                         .ifPresent(pluginItemList::add);
             }
             if (pluginItemList.isEmpty()) {
@@ -114,7 +121,7 @@ public class PluginClassLoader extends URLClassLoader {
      * @param jarEntryName
      * @return
      */
-    private PluginItem checkAndGetPluginClass(String jarEntryName) {
+    private PluginItem checkAndGetPluginClass(String jarEntryName, JarFile jarFile) {
         if (StringUtils.isBlank(jarEntryName) || !jarEntryName.contains(CLASS_SUFFIX)) {
             // 非class文件跳过
             return null;
@@ -133,12 +140,30 @@ public class PluginClassLoader extends URLClassLoader {
                 pluginItem.setClassName(className);
                 pluginItem.setSimpleClassName(aClass.getSimpleName());
                 pluginItem.setComponentName(pluginComponent.name());
-                pluginItem.setIconUrl(pluginComponent.icon());
+                // 图标
+                pluginItem.setIcon(getImageIcon(pluginComponent.icon(), jarFile));
                 pluginItem.setPlugin((Plugin) obj);
                 return pluginItem;
             }
         } catch (Exception e) {
             log.error("load plugin class error. className={}", jarEntryName, e);
+        }
+        return null;
+    }
+
+    private ImageIcon getImageIcon(String iconName, JarFile jarFile){
+        if (StringUtils.isBlank(iconName)){
+            return null;
+        }
+        try {
+            JarEntry jarEntry = jarFile.getJarEntry(iconName);
+            InputStream inputStream = jarFile.getInputStream(jarEntry);
+            ImageIcon imageIcon = new ImageIcon(inputStream.readAllBytes());
+            // 重置图标长宽
+            Image image = imageIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+            return new ImageIcon(image);
+        } catch (Exception e) {
+            log.error("Failed to get icon. jarName={}, iconName={}", jarFile.getName(), iconName);
         }
         return null;
     }

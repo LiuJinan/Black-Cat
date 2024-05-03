@@ -1,0 +1,31 @@
+package cn.liujinnan.tools.constant;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * @description: 语言key
+ * @author: ljn
+ * @create: 2024-05-02 18:22
+ **/
+@RequiredArgsConstructor
+@Getter
+public enum LanguageEnum {
+
+    /**
+     * 语言相关key
+     */
+    MENU_FILE("menu.file", "文件"),
+
+    MENU_VIEW("menu.view", "视图"),
+
+    MENU_HELP("menu.help", "帮助"),
+
+    HOME_PLUGIN("home.plugin", "插件"),
+
+    HOME_PLUGIN_EMPTY("home.plugin.empty","未扫描到插件"),
+    ;
+
+    private final String key;
+    private final String name;
+}

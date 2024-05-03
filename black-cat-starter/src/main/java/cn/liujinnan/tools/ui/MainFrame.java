@@ -5,16 +5,13 @@
 package cn.liujinnan.tools.ui;
 
 import cn.liujinnan.tools.constant.PropertiesEnum;
-import cn.liujinnan.tools.plugin.PluginClassLoader;
-import cn.liujinnan.tools.plugin.PluginManager;
-import cn.liujinnan.tools.plugin.domain.PluginItem;
-import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
+import cn.liujinnan.tools.ui.home.HomeUi;
+import cn.liujinnan.tools.ui.menu.MenuBarUi;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
  * @author ljn
@@ -33,10 +30,8 @@ public class MainFrame {
 
 
         JFrame jf = new JFrame("Black-Cat");
-        JMenuBar jMenuBar = new JMenuBar();
-        jf.setJMenuBar(jMenuBar);
-        JMenu jMenu = new JMenu("file");
-        jMenuBar.add(jMenu);
+        // 菜单
+        jf.setJMenuBar(new MenuBarUi());
         // 设置窗口大小
         Integer width = instance.getIntValue(PropertiesEnum.WINDOW_WIDTH.getKey());
         Integer height = instance.getIntValue(PropertiesEnum.WINDOW_HEIGHT.getKey());
@@ -47,52 +42,33 @@ public class MainFrame {
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jf.setVisible(true);
 
+        // 窗口图标
         Toolkit kit = Toolkit.getDefaultToolkit();
-        Image image = kit.getImage(MainFrame.class.getResource("/logo.png"));
+        Image image = kit.getImage(MainFrame.class.getResource("/img/logo.png"));
         jf.setIconImage(image);
 
-        // 创建选项卡
-        JTabbedPane menu = new JTabbedPane();
-        menu.setTabPlacement(JTabbedPane.LEFT);
-        jf.setContentPane(menu);
-//        String path = MainFrame.class.getResource("/info.png").getPath();
-//        tabbedPane.addTab("aa", new ImageIcon(path), jPanel);
-        JPanel home = new JPanel(new GridLayout(1, 2));
+        // 左侧菜单选项卡
+        UIManager.put("TabbedPane.tabType", "card");
+        UIManager.put("TabbedPane.hasFullBorder", true);
+//        UIManager.put("TabbedPane.disabledUnderlineColor", "disabledUnderlineColor");
 
-        menu.addTab("主页", home);
-        JTabbedPane homeTabbedPane = new JTabbedPane();
-        homeTabbedPane.setTabPlacement(JTabbedPane.TOP);
-        homeTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        home.add(homeTabbedPane);
+        JTabbedPane leftPane = new JTabbedPane();
+        leftPane.setTabPlacement(JTabbedPane.LEFT);
+        jf.setContentPane(leftPane);
 
-        menu.addTab("帮助", new JPanel());
-        JPanel setting = new JPanel();
-        menu.addTab("设置", setting);
-//        menu.setSize(100,100);
-        menu.setFont(new Font(null, Font.PLAIN, 20));
+        // 主页
+        HomeUi homeUi = new HomeUi();
+        leftPane.addTab("",homeUi.getImageIcon(), homeUi);
 
-        showPluginItem(homeTabbedPane);
+        //收藏
+//        JPanel favorites = new JPanel(new GridLayout(1, 2));
+//        String favoritesImg = MainFrame.class.getResource("/img/favorites.png").getPath();
+//        leftPane.addTab("",new ImageIcon(favoritesImg), favorites);
+//        JTabbedPane favoritesTabbedPane = new JTabbedPane();
+//        favoritesTabbedPane.setTabPlacement(JTabbedPane.TOP);
+//        favoritesTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+//        favorites.add(favoritesTabbedPane);
     }
 
-    private static void showPluginItem(JTabbedPane homeTabbedPane) {
-        try {
-            PluginManager pluginManager = PluginManager.getInstance();
-            List<PluginClassLoader> pluginClassLoaderList = pluginManager.getPluginClassLoaderList();
-            pluginClassLoaderList.forEach(pluginClassLoader -> {
-                PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
-                try {
-                    List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
-                    pluginItemList.forEach(pluginItem -> {
-                        // TODO: 2024/4/30 图标
-                        homeTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
-                        log.info("load : {}", pluginItem.getClassName());
-                    });
-                } catch (Exception e) {
-                    log.error("load plugin item error. jar={}", pluginJarInfo.getJarName(), e);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 }

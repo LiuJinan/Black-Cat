@@ -26,9 +26,12 @@ public class Application {
 //        UIManager.put( "TabbedPane.selectedBackground", Color.white );
 //        UIManager.put( "TabbedPane.tabSeparatorsFullHeight", true );
         // https://www.formdev.com/flatlaf/themes/
+
+//        IntelliJTheme.setup( Application.class.getResourceAsStream(
+//                "/themes/one_dark.theme.json" ) );
+
+        //标题栏菜单
         System.setProperty("flatlaf.menuBarEmbedded", "true");
-        IntelliJTheme.setup( Application.class.getResourceAsStream(
-                "/themes/RiderLight.theme.json" ) );
         MainFrame.showMainFrame();
     }
 }

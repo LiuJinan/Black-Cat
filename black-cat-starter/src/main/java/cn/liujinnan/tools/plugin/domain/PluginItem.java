@@ -7,6 +7,8 @@ package cn.liujinnan.tools.plugin.domain;
 import cn.liujinnan.tools.ext.plugin.Plugin;
 import lombok.Data;
 
+import javax.swing.*;
+
 /**
  * @description: 插件子项
  * @author: liujinnan
@@ -34,7 +36,7 @@ public class PluginItem {
     /**
      * 图标
      */
-    private String iconUrl;
+    private Icon icon;
 
     private Plugin plugin;
 
