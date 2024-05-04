@@ -6,6 +6,7 @@ import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.ui.MainFrame;
+import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,19 +57,25 @@ public class HomeUi extends JPanel {
                 jTabbedPane.addTab(instance.getValue(LanguageEnum.HOME_PLUGIN_EMPTY.getKey()), new JLabel());
             }
             pluginClassLoaderList.forEach(pluginClassLoader -> {
-                PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
-                JPanel itemPanel = new JPanel(new GridLayout(1, 1));
-                jTabbedPane.addTab(pluginJarInfo.getJarName(), itemPanel);
+                // 样式
                 UIManager.put("TabbedPane.tabType", "card");
                 UIManager.put("JTabbedPane.tabClosable", true);
+                UIManager.put("TabbedPane.tabLayoutPolicy", "scroll");
+
+                PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
+                JPanel itemPanel = new JPanel(new BorderLayout());
+                jTabbedPane.addTab(pluginJarInfo.getJarName(), itemPanel);
 
                 JTabbedPane itemPane = new JTabbedPane();
+                itemPane.setTabPlacement(JTabbedPane.TOP);
                 // tab 关闭功能
                 itemPane.putClientProperty("JTabbedPane.tabClosable", true);
                 itemPane.putClientProperty("JTabbedPane.tabCloseCallback", (IntConsumer) itemPane::remove);
-                itemPane.setTabPlacement(JTabbedPane.TOP);
-                itemPanel.add(itemPane);
-
+                // 设置工具栏
+                HomeToolBar toolBar = new HomeToolBar(pluginJarInfo, itemPane);
+                itemPanel.add(toolBar, BorderLayout.NORTH);
+                // 设置标签页
+                itemPanel.add(itemPane, BorderLayout.CENTER);
                 try {
                     List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
                     pluginItemList.forEach(pluginItem -> {

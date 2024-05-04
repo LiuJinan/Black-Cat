@@ -74,6 +74,10 @@ public class PluginManager {
         return new ArrayList<>(pluginClassLoaderMap.values());
     }
 
+//    public PluginClassLoader getPluginClassLoader() {
+//
+//    }
+
     public static PluginManager getInstance() {
         return PLUGINMANAGER;
     }

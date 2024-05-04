@@ -5,6 +5,7 @@ import cn.liujinnan.tools.ext.plugin.annotation.PluginComponent;
 import cn.liujinnan.tools.ext.plugin.constant.PluginPropertiesEnum;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
+import cn.liujinnan.tools.utils.FileUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +80,6 @@ public class PluginClassLoader extends URLClassLoader {
         List<PluginItem> pluginItemList = Lists.newArrayList();
         pluginJarInfo.setPluginItemList(pluginItemList);
         try (JarFile jarFile = new JarFile(jarFilePath)) {
-
             pluginJarInfo.setJarName(new File(jarFile.getName()).getName());
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
