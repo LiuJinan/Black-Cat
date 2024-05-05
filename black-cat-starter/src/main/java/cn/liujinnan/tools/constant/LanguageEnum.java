@@ -21,6 +21,8 @@ public enum LanguageEnum {
 
     MENU_HELP("menu.help", "帮助"),
 
+    MENU_HELP_ABOUT("menu.help.about", "关于"),
+
     HOME_PLUGIN("home.plugin", "插件"),
 
     HOME_PLUGIN_EMPTY("home.plugin.empty","未扫描到插件"),

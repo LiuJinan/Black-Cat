@@ -1,6 +1,7 @@
 package cn.liujinnan.tools.ui.menu;
 
 import cn.liujinnan.tools.constant.LanguageEnum;
+import cn.liujinnan.tools.ui.menu.help.HelpAbout;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class MenuBarUi extends JMenuBar {
         this.add(view);
 
         JMenu help = new JMenu(instance.getValue(LanguageEnum.MENU_HELP.getKey()));
+        help.add(new HelpAbout());
         this.add(help);
     }
 }
