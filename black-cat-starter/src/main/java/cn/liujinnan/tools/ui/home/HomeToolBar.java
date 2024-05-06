@@ -1,11 +1,15 @@
 package cn.liujinnan.tools.ui.home;
 
+import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.ColorUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.List;
 
 /**
  * @description: home页面工具栏
@@ -47,6 +51,15 @@ public class HomeToolBar extends JPanel {
 
 
         jToolBar.add(update);
-        // TODO: 2024-05-04 刷新功能开发 
+        update.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
+                itemPane.removeAll();
+                pluginItemList.forEach(pluginItem -> {
+                    itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getPlugin().getJComponent());
+                });
+            }
+        });
     }
 }

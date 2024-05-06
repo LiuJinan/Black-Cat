@@ -5,7 +5,6 @@
 package cn.liujinnan.tools.ui.menu.help;
 
 import cn.liujinnan.tools.constant.LanguageEnum;
-import cn.liujinnan.tools.ui.MainFrame;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import cn.liujinnan.tools.utils.markdown.MdToHtmlUtil;
 import lombok.Setter;
