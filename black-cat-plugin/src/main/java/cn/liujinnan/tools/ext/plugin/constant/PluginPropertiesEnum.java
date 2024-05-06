@@ -4,7 +4,10 @@
 
 package cn.liujinnan.tools.ext.plugin.constant;
 
-
+/**
+ * 插件配置
+ * @author ljn
+ */
 public enum PluginPropertiesEnum {
 
     /**
