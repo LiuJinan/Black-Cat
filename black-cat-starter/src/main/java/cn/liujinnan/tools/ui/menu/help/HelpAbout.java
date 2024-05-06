@@ -55,7 +55,7 @@ public class HelpAbout extends JMenuItem {
                     jFrame.setSize(300, 400);
                     // 中间展示
                     Point location = jFrame.getLocation();
-                    jFrame.setLocation((int)location.getX()-jFrame.getWidth()/2, (int)location.getY()-jFrame.getHeight()/2);
+                    jFrame.setLocation((int)location.getX()-(jFrame.getWidth()/2), (int)location.getY()-(jFrame.getHeight()/2));
 
                     JEditorPane editorPane = new JEditorPane();
                     editorPane.setContentType("text/html");
