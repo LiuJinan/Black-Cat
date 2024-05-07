@@ -79,7 +79,7 @@ public class HomeUi extends JPanel {
                 try {
                     List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
                     pluginItemList.forEach(pluginItem -> {
-                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getPlugin().getJComponent());
+                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getJComponent());
                         log.info("load : jarName={} className={}", pluginJarInfo.getJarName(), pluginItem.getClassName());
                     });
                 } catch (Exception e) {

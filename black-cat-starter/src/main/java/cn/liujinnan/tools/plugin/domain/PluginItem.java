@@ -40,4 +40,9 @@ public class PluginItem {
 
     private Plugin plugin;
 
+    /**
+     * plugin.getJComponent(), 无需创建多次实例，加载时初始化
+     */
+    private JComponent jComponent;
+
 }

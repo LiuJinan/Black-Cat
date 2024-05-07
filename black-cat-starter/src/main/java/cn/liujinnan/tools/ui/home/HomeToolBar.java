@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,9 +56,11 @@ public class HomeToolBar extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
-                itemPane.removeAll();
+                List<Component> existList = Arrays.asList(itemPane.getComponents());
                 pluginItemList.forEach(pluginItem -> {
-                    itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getPlugin().getJComponent());
+                    if (!existList.contains(pluginItem.getJComponent())) {
+                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getJComponent());
+                    }
                 });
             }
         });

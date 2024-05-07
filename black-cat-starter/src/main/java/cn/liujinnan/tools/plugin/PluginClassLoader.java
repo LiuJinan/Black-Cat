@@ -5,14 +5,11 @@ import cn.liujinnan.tools.ext.plugin.annotation.PluginComponent;
 import cn.liujinnan.tools.ext.plugin.constant.PluginPropertiesEnum;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
-import cn.liujinnan.tools.utils.FileUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -21,11 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 /**
  * 插件类加载器
@@ -142,7 +138,9 @@ public class PluginClassLoader extends URLClassLoader {
                 pluginItem.setComponentName(pluginComponent.name());
                 // 图标
                 pluginItem.setIcon(getImageIcon(pluginComponent.icon(), jarFile));
-                pluginItem.setPlugin((Plugin) obj);
+                Plugin plugin = (Plugin) obj;
+                pluginItem.setPlugin(plugin);
+                pluginItem.setJComponent(plugin.getJComponent());
                 return pluginItem;
             }
         } catch (Exception e) {
