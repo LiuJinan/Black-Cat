@@ -21,6 +21,12 @@ import java.awt.*;
 @Slf4j
 public class MainFrame {
 
+    private static final JFrame JF = new JFrame("Black-Cat");
+
+    public static JFrame getMainFrame(){
+        return JF;
+    }
+
     /**
      * 显示主窗口
      */
@@ -28,24 +34,22 @@ public class MainFrame {
 
         PropertiesUtils instance = PropertiesUtils.getInstance();
 
-
-        JFrame jf = new JFrame("Black-Cat");
         // 菜单
-        jf.setJMenuBar(new MenuBarUi());
+        JF.setJMenuBar(new MenuBarUi());
         // 设置窗口大小
         Integer width = instance.getIntValue(PropertiesEnum.WINDOW_WIDTH.getKey());
         Integer height = instance.getIntValue(PropertiesEnum.WINDOW_HEIGHT.getKey());
-        jf.setSize(width, height);
+        JF.setSize(width, height);
         // 把窗口位置设置到屏幕中心
-        jf.setLocationRelativeTo(null);
+        JF.setLocationRelativeTo(null);
         // 当点击窗口的关闭按钮时退出程序
-        jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jf.setVisible(true);
+        JF.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JF.setVisible(true);
 
         // 窗口图标
         Toolkit kit = Toolkit.getDefaultToolkit();
         Image image = kit.getImage(MainFrame.class.getResource("/img/logo.png"));
-        jf.setIconImage(image);
+        JF.setIconImage(image);
 
         // 左侧菜单选项卡
         UIManager.put("TabbedPane.tabType", "card");
@@ -54,7 +58,7 @@ public class MainFrame {
 
         JTabbedPane leftPane = new JTabbedPane();
         leftPane.setTabPlacement(JTabbedPane.LEFT);
-        jf.setContentPane(leftPane);
+        JF.setContentPane(leftPane);
 
         // 主页
         HomeUi homeUi = new HomeUi();

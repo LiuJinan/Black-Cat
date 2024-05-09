@@ -5,6 +5,7 @@
 package cn.liujinnan.tools.ui.menu.help;
 
 import cn.liujinnan.tools.constant.LanguageEnum;
+import cn.liujinnan.tools.ui.MainFrame;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import cn.liujinnan.tools.utils.markdown.MdToHtmlUtil;
 import lombok.Setter;
@@ -37,6 +38,10 @@ public class HelpAbout extends JMenuItem {
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Point location = MainFrame.getMainFrame().getLocation();
+                double w = location.getX() + ((double) (MainFrame.getMainFrame().getWidth() - jFrame.getWidth()) / 2);
+                double h = location.getY() + ((double) (MainFrame.getMainFrame().getHeight() - jFrame.getHeight()) / 2);
+                jFrame.setLocation((int)w, (int)h);
                 jFrame.setVisible(true);
             }
         });
