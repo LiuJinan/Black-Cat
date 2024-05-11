@@ -21,15 +21,16 @@ public class Application {
 
     public static void main(String[] args) throws Exception{
 //        UIManager.setLookAndFeel(new FlatDarculaLaf());
-        UIManager.setLookAndFeel(new FlatIntelliJLaf());
+//        UIManager.setLookAndFeel(new FlatIntelliJLaf());
 //        UIManager.put( "TabbedPane.showTabSeparators", true );
 //        UIManager.put( "TabbedPane.selectedBackground", Color.white );
 //        UIManager.put( "TabbedPane.tabSeparatorsFullHeight", true );
         // https://www.formdev.com/flatlaf/themes/
 
+        IntelliJTheme.setup( Application.class.getResourceAsStream(
+                "/themes/expUi/expUI_light.theme.json" ) );
 //        IntelliJTheme.setup( Application.class.getResourceAsStream(
 //                "/themes/one_dark.theme.json" ) );
-
         //标题栏菜单
         System.setProperty("flatlaf.menuBarEmbedded", "true");
         MainFrame.showMainFrame();
