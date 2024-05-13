@@ -9,11 +9,17 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @description: home页面工具栏
@@ -29,11 +35,11 @@ public class HomeToolBar extends JPanel {
     /**
      * 当前工具栏对应的jar插件
      */
-    private PluginJarInfo pluginJarInfo;
+    private final PluginJarInfo pluginJarInfo;
     /**
      * jar插件对应的plugin标签
      */
-    private JTabbedPane itemPane;
+    private final JTabbedPane itemPane;
 
     public HomeToolBar(PluginJarInfo pluginJarInfo, JTabbedPane itemPane) {
         this.pluginJarInfo = pluginJarInfo;
@@ -91,6 +97,7 @@ public class HomeToolBar extends JPanel {
     }
 
     private void initFavoritesBtn() {
+
         JButton favorites = new JButton();
         FlatSVGIcon favoritesSvg = new FlatSVGIcon("img/favorites.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
         favorites.setIcon(favoritesSvg);
@@ -100,5 +107,25 @@ public class HomeToolBar extends JPanel {
         FlatSVGIcon favorites2Svg = new FlatSVGIcon("img/favorites-fill.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
         favorites2.setIcon(favorites2Svg);
         jToolBar.add(favorites2);
+
+
+        itemPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                pluginJarInfo.getPluginItemList().forEach(pluginItem -> {
+                    if (pluginItem.getJComponent() ==  itemPane.getSelectedComponent()) {
+                        // 收藏改变图标颜色
+//                        if (System.currentTimeMillis() % 2 == 0){
+//                            favorites.setIcon(favorites2Svg);
+//                        }else {
+//                            favorites.setIcon(favoritesSvg);
+//                        }
+                        System.out.println(pluginItem.getClassName());
+                        System.out.println(System.getProperty("user.home"));
+
+                    }
+                });
+            }
+        });
     }
 }
