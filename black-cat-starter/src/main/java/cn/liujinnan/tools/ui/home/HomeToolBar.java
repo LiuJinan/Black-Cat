@@ -1,14 +1,17 @@
 package cn.liujinnan.tools.ui.home;
 
+import cn.liujinnan.tools.constant.LanguageEnum;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.ColorUtils;
+import cn.liujinnan.tools.utils.PropertiesUtils;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +21,8 @@ import java.util.List;
  * @create: 2024-05-04 12:14
  **/
 public class HomeToolBar extends JPanel {
+
+    private static final int TOOL_BUTTON_WIDTH_HEIGHT = 20;
 
     private final JToolBar jToolBar = new JToolBar();
 
@@ -42,19 +47,38 @@ public class HomeToolBar extends JPanel {
         // 工具栏背景色加深10%
         jToolBar.setBackground(ColorUtils.darkenColor(jToolBar.getBackground(), 0.1));
 
+        // 更新按钮
+        initUpdateBtn();
+
+        // 收藏按钮
+        initFavoritesBtn();
+    }
+
+    private void initUpdateBtn() {
+        PropertiesUtils instance = PropertiesUtils.getInstance();
         JButton update = new JButton();
-        URL updatePng = this.getClass().getResource("/img/update.png");
-        Image scaledInstance = new ImageIcon(updatePng).getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-        update.setIcon(new ImageIcon(scaledInstance));
-//        update.setIcon(new FlatSearchIcon());
+        FlatSVGIcon updateSvg = new FlatSVGIcon("img/update.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
+        update.setIcon(updateSvg);
+        update.setToolTipText(instance.getValue(LanguageEnum.HOME_PLUGIN_TOOLBAR_UPDATE_BTN_TIP.getKey()));
+        //        update.setIcon(new FlatSearchIcon());
 //        update.putClientProperty("JButton.buttonType", "help");
 //        UIManager.put("JButton.buttonType", "help");
 
+//        update.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_ROUND_RECT);
 
         jToolBar.add(update);
         update.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+//                updateSvg.setColorFilter(new FlatSVGIcon.ColorFilter(c -> {
+//                    return Color.decode("#f4ea2a");
+////                    if (update.isSelected()) {
+////                        return Color.decode("#f4ea2a");
+////                    } else {
+////                        return Color.red;
+////                    }
+//                }));
+
                 List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
                 List<Component> existList = Arrays.asList(itemPane.getComponents());
                 pluginItemList.forEach(pluginItem -> {
@@ -64,5 +88,17 @@ public class HomeToolBar extends JPanel {
                 });
             }
         });
+    }
+
+    private void initFavoritesBtn() {
+        JButton favorites = new JButton();
+        FlatSVGIcon favoritesSvg = new FlatSVGIcon("img/favorites.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
+        favorites.setIcon(favoritesSvg);
+        jToolBar.add(favorites);
+
+        JButton favorites2 = new JButton();
+        FlatSVGIcon favorites2Svg = new FlatSVGIcon("img/favorites-fill.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
+        favorites2.setIcon(favorites2Svg);
+        jToolBar.add(favorites2);
     }
 }

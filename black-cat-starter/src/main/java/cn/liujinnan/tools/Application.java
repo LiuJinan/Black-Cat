@@ -29,6 +29,8 @@ public class Application {
 
         IntelliJTheme.setup( Application.class.getResourceAsStream(
                 "/themes/expUi/expUI_light.theme.json" ) );
+        IntelliJTheme.setup( Application.class.getResourceAsStream(
+                "/themes/expUi/expUI_dark.theme.json" ) );
 //        IntelliJTheme.setup( Application.class.getResourceAsStream(
 //                "/themes/one_dark.theme.json" ) );
         //标题栏菜单

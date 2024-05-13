@@ -63,6 +63,7 @@ public class HelpAbout extends JMenuItem {
 
                     JEditorPane editorPane = new JEditorPane();
                     editorPane.setContentType("text/html");
+                    // TODO: 2024/5/13 语言， 
                     editorPane.setText(MdToHtmlUtil.mdToHtml("/about.md"));
                     editorPane.setEditable(false);
                     jFrame.add(editorPane);

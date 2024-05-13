@@ -26,6 +26,11 @@ public enum LanguageEnum {
     HOME_PLUGIN("home.plugin", "插件"),
 
     HOME_PLUGIN_EMPTY("home.plugin.empty","未扫描到插件"),
+
+    /**
+     * 主页工具栏刷新按钮悬停提示
+     */
+    HOME_PLUGIN_TOOLBAR_UPDATE_BTN_TIP("home.plugin.toolbar.update.btn.tip", "刷新"),
     ;
 
     private final String key;

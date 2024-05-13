@@ -8,6 +8,7 @@ import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.ui.MainFrame;
 import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -93,8 +94,10 @@ public class HomeUi extends JPanel {
         }
     }
 
-    public ImageIcon getImageIcon() {
+    public Icon getImageIcon() {
+        FlatSVGIcon homeIcon = new FlatSVGIcon("img/home.svg", 35, 35);
         String homeImg = Objects.requireNonNull(MainFrame.class.getResource("/img/home.png")).getPath();
-        return new ImageIcon(homeImg);
+//        return new ImageIcon(homeImg);
+        return homeIcon;
     }
 }
