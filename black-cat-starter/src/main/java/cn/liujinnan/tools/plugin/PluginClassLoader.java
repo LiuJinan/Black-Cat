@@ -38,7 +38,7 @@ public class PluginClassLoader extends URLClassLoader {
 
     private PluginJarInfo pluginJarInfo;
 
-    private PluginClassLoader(String name, URL[] urls, ClassLoader parent, String jarFilePath) throws Exception{
+    private PluginClassLoader(String name, URL[] urls, ClassLoader parent, String jarFilePath) throws Exception {
         super(name, urls, parent);
         reloadPluginJarInfo(jarFilePath);
     }
@@ -66,10 +66,11 @@ public class PluginClassLoader extends URLClassLoader {
 
     /**
      * 加载插件信息
+     *
      * @param jarFilePath
      * @return
      */
-    private void reloadPluginJarInfo(String jarFilePath) throws Exception{
+    private void reloadPluginJarInfo(String jarFilePath) throws Exception {
 
         pluginJarInfo = new PluginJarInfo();
         pluginJarInfo.setJarPath(jarFilePath);
@@ -84,15 +85,14 @@ public class PluginClassLoader extends URLClassLoader {
                     loadPluginProperties(jarFile.getInputStream(jarEntry), pluginJarInfo);
                     continue;
                 }
-                Optional.ofNullable(checkAndGetPluginClass(jarEntry.getName(),jarFile))
+                Optional.ofNullable(checkAndGetPluginClass(jarEntry.getName(), jarFile))
                         .ifPresent(pluginItemList::add);
             }
             if (pluginItemList.isEmpty()) {
                 throw new IllegalAccessException();
             }
         } catch (IOException e) {
-            // todo 日志打印
-            throw new RuntimeException(e);
+            log.error("Failed to load plugin. jarFilePath={}", jarFilePath, e);
         }
     }
 
@@ -149,8 +149,8 @@ public class PluginClassLoader extends URLClassLoader {
         return null;
     }
 
-    private ImageIcon getImageIcon(String iconName, JarFile jarFile){
-        if (StringUtils.isBlank(iconName)){
+    private ImageIcon getImageIcon(String iconName, JarFile jarFile) {
+        if (StringUtils.isBlank(iconName)) {
             return null;
         }
         try {
