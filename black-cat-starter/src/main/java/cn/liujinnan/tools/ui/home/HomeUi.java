@@ -62,6 +62,9 @@ public class HomeUi extends JPanel {
                 UIManager.put("TabbedPane.tabType", "card");
                 UIManager.put("JTabbedPane.tabClosable", true);
                 UIManager.put("TabbedPane.tabLayoutPolicy", "scroll");
+                // 插件选项卡设置为圆角
+                UIManager.put("TabbedPane.cardTabArc", 20);
+//                UIManager.put("TabbedPane.underlineColor", Color.decode("#3574F0"));
 
                 PluginJarInfo pluginJarInfo = pluginClassLoader.getPluginJarInfo();
                 JPanel itemPanel = new JPanel(new BorderLayout());
