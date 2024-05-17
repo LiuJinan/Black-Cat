@@ -596,9 +596,14 @@
     "TabbedPane": {
       "tabHeight": 40,
       "tabSelectionArc": 4,
-      "hoverColor": "Gray4",
+      "hoverColor": "Blue2",
       "contentAreaColor": "Gray1",
-      "focusColor": "Blue2"
+      "focusColor": "Blue2",
+      "disabledUnderlineColor": true,
+
+      "selectedBackground": "Blue2",
+      "underlineColor": "Blue2",
+      "inactiveUnderlineColor": "Blue2"
     },
 
     "Table": {

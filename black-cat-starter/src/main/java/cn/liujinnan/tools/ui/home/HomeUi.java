@@ -50,6 +50,7 @@ public class HomeUi extends JPanel {
             PluginManager pluginManager = PluginManager.getInstance();
             PropertiesUtils instance = PropertiesUtils.getInstance();
             //第一行为标题行，不可选中
+            jTabbedPane.setFont(new Font(null, Font.PLAIN, 16));
             jTabbedPane.addTab(instance.getValue(LanguageEnum.HOME_PLUGIN.getKey()), new JLabel());
             jTabbedPane.setEnabledAt(0, false);
 

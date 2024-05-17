@@ -54,8 +54,6 @@ public class MainFrame {
         // 左侧菜单选项卡
         UIManager.put("TabbedPane.tabType", "card");
         UIManager.put("TabbedPane.hasFullBorder", true);
-//        UIManager.put("TabbedPane.disabledUnderlineColor", "disabledUnderlineColor");
-
         JTabbedPane leftPane = new JTabbedPane();
         leftPane.setTabPlacement(JTabbedPane.LEFT);
         JF.setContentPane(leftPane);
