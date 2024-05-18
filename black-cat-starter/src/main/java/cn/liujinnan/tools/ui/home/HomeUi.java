@@ -5,8 +5,6 @@ import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
-import cn.liujinnan.tools.ui.MainFrame;
-import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,7 @@ import java.util.Objects;
 import java.util.function.IntConsumer;
 
 /**
- * @description:
+ * @description: 主页
  * @author: ljn
  * @create: 2024-05-02 21:43
  **/
@@ -50,7 +48,7 @@ public class HomeUi extends JPanel {
             PluginManager pluginManager = PluginManager.getInstance();
             PropertiesUtils instance = PropertiesUtils.getInstance();
             //第一行为标题行，不可选中
-            jTabbedPane.setFont(new Font(null, Font.PLAIN, 16));
+            jTabbedPane.setFont(new Font(null, Font.PLAIN, 15));
             jTabbedPane.addTab(instance.getValue(LanguageEnum.HOME_PLUGIN.getKey()), new JLabel());
             jTabbedPane.setEnabledAt(0, false);
 
@@ -76,6 +74,7 @@ public class HomeUi extends JPanel {
                 // tab 关闭功能
                 itemPane.putClientProperty("JTabbedPane.tabClosable", true);
                 itemPane.putClientProperty("JTabbedPane.tabCloseCallback", (IntConsumer) itemPane::remove);
+                itemPane.putClientProperty("JTabbedPane.minimumTabWidth", 100);
                 // 设置工具栏
                 HomeToolBar toolBar = new HomeToolBar(pluginJarInfo, itemPane);
                 itemPanel.add(toolBar, BorderLayout.NORTH);
@@ -88,20 +87,17 @@ public class HomeUi extends JPanel {
                         log.info("load : jarName={} className={}", pluginJarInfo.getJarName(), pluginItem.getClassName());
                     });
                 } catch (Exception e) {
-                    log.error("load plugin item error. jar={}", pluginJarInfo.getJarName(), e);
+                    log.error("Failed to load plug-in item. jar={}", pluginJarInfo.getJarName(), e);
                 }
             });
             //默认选中第二行
             jTabbedPane.setSelectedIndex(1);
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error("Failed to display plugin list.", e);
         }
     }
 
     public Icon getImageIcon() {
-        FlatSVGIcon homeIcon = new FlatSVGIcon("img/home.svg", 35, 35);
-        String homeImg = Objects.requireNonNull(MainFrame.class.getResource("/img/home.png")).getPath();
-//        return new ImageIcon(homeImg);
-        return homeIcon;
+        return new FlatSVGIcon("img/home.svg", 30, 30);
     }
 }
