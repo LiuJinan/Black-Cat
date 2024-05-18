@@ -44,7 +44,6 @@ public class MainFrame {
         JF.setLocationRelativeTo(null);
         // 当点击窗口的关闭按钮时退出程序
         JF.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JF.setVisible(true);
 
         // 窗口图标
         Toolkit kit = Toolkit.getDefaultToolkit();
@@ -57,10 +56,13 @@ public class MainFrame {
         JTabbedPane leftPane = new JTabbedPane();
         leftPane.setTabPlacement(JTabbedPane.LEFT);
         JF.setContentPane(leftPane);
-
+        // 首行为空
+        leftPane.addTab("", new JLabel());
+        leftPane.setEnabledAt(0, false);
         // 主页
         HomeUi homeUi = new HomeUi();
         leftPane.addTab("",homeUi.getImageIcon(), homeUi);
+        leftPane.setSelectedIndex(1);
 
         //收藏
 //        JPanel favorites = new JPanel(new GridLayout(1, 2));
@@ -70,6 +72,7 @@ public class MainFrame {
 //        favoritesTabbedPane.setTabPlacement(JTabbedPane.TOP);
 //        favoritesTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 //        favorites.add(favoritesTabbedPane);
+        JF.setVisible(true);
     }
 
 
