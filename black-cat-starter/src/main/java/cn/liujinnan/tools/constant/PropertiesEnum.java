@@ -42,6 +42,17 @@ public enum PropertiesEnum {
     WINDOW_WIDTH("window.width", "主窗口宽度"),
     WINDOW_HEIGHT("window.height", "主窗口高度"),
 
+    /**
+     * 图标地址。 img/default(dark)/xxx.svg
+     */
+    SVG_HOME("svg.home", "主页图标地址"),
+    SVG_HOME_FILL("svg.home.fill", "主页图标地址(选中)"),
+    SVG_FAVORITES("svg.favorites", "收藏图标地址"),
+    SVG_FAVORITES_FILL("svg.favorites.fill", "收藏图标地址(选中)"),
+    SVG_TOOLBAR_FAVORITES("svg.toolbar.favorites", "工具栏收藏图标地址"),
+    SVG_TOOLBAR_FAVORITES_FILL("svg.toolbar.favorites.fill", "工具栏收藏图标地址(选中)"),
+
+
     ;
 
     private final String key;

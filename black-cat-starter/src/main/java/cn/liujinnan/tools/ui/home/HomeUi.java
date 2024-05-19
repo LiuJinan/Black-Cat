@@ -1,6 +1,7 @@
 package cn.liujinnan.tools.ui.home;
 
 import cn.liujinnan.tools.constant.LanguageEnum;
+import cn.liujinnan.tools.constant.PropertiesEnum;
 import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
@@ -98,6 +99,6 @@ public class HomeUi extends JPanel {
     }
 
     public Icon getImageIcon() {
-        return new FlatSVGIcon("img/home.svg", 30, 30);
+        return (Icon)PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME.getKey());
     }
 }

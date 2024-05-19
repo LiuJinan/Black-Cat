@@ -158,4 +158,13 @@ public class PropertiesUtils {
     public Integer getIntValue(String propertiesKey) {
         return Integer.valueOf(PROPERTIES.getProperty(propertiesKey));
     }
+
+    public Object getObject(String propertiesKey){
+        return PROPERTIES.get(propertiesKey);
+    }
+
+
+    public void put(String propertiesKey, Object val) {
+        PROPERTIES.put(propertiesKey, val);
+    }
 }
