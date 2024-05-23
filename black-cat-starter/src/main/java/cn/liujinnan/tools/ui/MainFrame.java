@@ -59,6 +59,8 @@ public class MainFrame {
         // 默认选项卡颜色
         UIManager.put("TabbedPane.tabType", "card");
         UIManager.put("TabbedPane.hasFullBorder", true);
+        UIManager.put("TabbedPane.showTabSeparators", false);
+
         UIManager.put("TabbedPane.hoverColor", UIManager.get("TabbedPane.background"));
         UIManager.put("TabbedPane.selectedBackground", UIManager.get("TabbedPane.background"));
         UIManager.put("TabbedPane.underlineColor", UIManager.get("TabbedPane.background"));

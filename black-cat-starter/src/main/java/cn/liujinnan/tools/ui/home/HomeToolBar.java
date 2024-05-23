@@ -3,6 +3,7 @@ package cn.liujinnan.tools.ui.home;
 import cn.liujinnan.tools.constant.LanguageEnum;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
+import cn.liujinnan.tools.cache.FavoritesCache;
 import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -15,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @description: home页面工具栏
@@ -98,28 +102,45 @@ public class HomeToolBar extends JPanel {
         favorites.setIcon(favoritesSvg);
         jToolBar.add(favorites);
 
-        JButton favorites2 = new JButton();
-        FlatSVGIcon favorites2Svg = new FlatSVGIcon("img/default/toolbar/favorites-fill.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
-        favorites2.setIcon(favorites2Svg);
-        jToolBar.add(favorites2);
+        FlatSVGIcon favoritesFillSvg = new FlatSVGIcon("img/default/toolbar/favorites-fill.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
 
+        Map<Component, PluginItem> pluginItemMap = pluginJarInfo.getPluginItemList().stream().collect(Collectors.toMap(PluginItem::getJComponent, e -> e));
 
+        // 切换插件，调整显示按钮颜色
         itemPane.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                pluginJarInfo.getPluginItemList().forEach(pluginItem -> {
-                    if (pluginItem.getJComponent() ==  itemPane.getSelectedComponent()) {
-                        // 收藏改变图标颜色
-//                        if (System.currentTimeMillis() % 2 == 0){
-//                            favorites.setIcon(favorites2Svg);
-//                        }else {
-//                            favorites.setIcon(favoritesSvg);
-//                        }
-                        System.out.println(pluginItem.getClassName());
-                        System.out.println(System.getProperty("user.home"));
 
+                Component selectedComponent = itemPane.getSelectedComponent();
+
+                PluginItem pluginItem = pluginItemMap.get(selectedComponent);
+                Optional.ofNullable(pluginItem).ifPresent(item -> {
+                    boolean exist = FavoritesCache.exist(pluginJarInfo.getJarName(), item.getClassName());
+                    if (exist) {
+                        favorites.setIcon(favoritesFillSvg);
+                    }else {
+                        favorites.setIcon(favoritesSvg);
                     }
                 });
+            }
+        });
+        // 点击收藏按钮
+        favorites.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Component selectedComponent = itemPane.getSelectedComponent();
+                PluginItem pluginItem = pluginItemMap.get(selectedComponent);
+                // 收藏
+                if (favoritesSvg == favorites.getIcon()) {
+                    favorites.setIcon(favoritesFillSvg);
+                    FavoritesCache.add(pluginJarInfo.getJarName(), pluginItem.getClassName());
+                    return;
+                }
+                // 移除收藏
+                if (favoritesFillSvg == favorites.getIcon()) {
+                    favorites.setIcon(favoritesSvg);
+                    FavoritesCache.remove(pluginJarInfo.getJarName(), pluginItem.getClassName());
+                }
             }
         });
     }
