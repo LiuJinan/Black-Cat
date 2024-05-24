@@ -6,6 +6,7 @@ package cn.liujinnan.tools.ui;
 
 import cn.liujinnan.tools.Application;
 import cn.liujinnan.tools.constant.PropertiesEnum;
+import cn.liujinnan.tools.ui.favorites.FavoritesUi;
 import cn.liujinnan.tools.ui.home.HomeUi;
 import cn.liujinnan.tools.ui.menu.MenuBarUi;
 import cn.liujinnan.tools.utils.PropertiesUtils;
@@ -14,8 +15,6 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
@@ -76,7 +75,7 @@ public class MainFrame {
         leftPane.setEnabledAt(0, false);
         // 主页
         HomeUi homeUi = new HomeUi();
-        leftPane.addTab("", homeUi.getImageIcon(), homeUi);
+        leftPane.addTab("", homeUi.getIcon(), homeUi);
         leftPane.setSelectedIndex(1);
 //        leftPane.addChangeListener(new ChangeListener() {
 //            @Override
@@ -85,14 +84,12 @@ public class MainFrame {
 //            }
 //        });
 
+//        leftPane.addTab("", new JLabel());
+//        leftPane.setEnabledAt(2, false);
+
         //收藏
-//        JPanel favorites = new JPanel(new GridLayout(1, 2));
-//        String favoritesImg = MainFrame.class.getResource("/img/favorites.png").getPath();
-//        leftPane.addTab("",new ImageIcon(favoritesImg), favorites);
-//        JTabbedPane favoritesTabbedPane = new JTabbedPane();
-//        favoritesTabbedPane.setTabPlacement(JTabbedPane.TOP);
-//        favoritesTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-//        favorites.add(favoritesTabbedPane);
+        FavoritesUi favoritesUi = new FavoritesUi();
+        leftPane.addTab("", favoritesUi.getIcon(), favoritesUi);
         JF.setVisible(true);
     }
 

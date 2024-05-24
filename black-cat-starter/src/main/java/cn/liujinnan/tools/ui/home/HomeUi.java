@@ -7,7 +7,6 @@ import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.PropertiesUtils;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -38,7 +37,7 @@ public class HomeUi extends JPanel {
 
         jTabbedPane = new JTabbedPane();
         jTabbedPane.setTabPlacement(JTabbedPane.LEFT);
-        jTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        jTabbedPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         this.add(jTabbedPane);
 
         showPlugin();
@@ -98,7 +97,7 @@ public class HomeUi extends JPanel {
         }
     }
 
-    public Icon getImageIcon() {
+    public Icon getIcon() {
         return (Icon)PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME.getKey());
     }
 }

@@ -1,9 +1,9 @@
 package cn.liujinnan.tools.ui.home;
 
+import cn.liujinnan.tools.cache.FavoritesCache;
 import cn.liujinnan.tools.constant.LanguageEnum;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
-import cn.liujinnan.tools.cache.FavoritesCache;
 import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -75,15 +75,6 @@ public class HomeToolBar extends JPanel {
         update.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                updateSvg.setColorFilter(new FlatSVGIcon.ColorFilter(c -> {
-//                    return Color.decode("#f4ea2a");
-////                    if (update.isSelected()) {
-////                        return Color.decode("#f4ea2a");
-////                    } else {
-////                        return Color.red;
-////                    }
-//                }));
-
                 List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
                 List<Component> existList = Arrays.asList(itemPane.getComponents());
                 pluginItemList.forEach(pluginItem -> {
