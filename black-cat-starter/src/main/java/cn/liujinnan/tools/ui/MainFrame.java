@@ -63,6 +63,17 @@ public class MainFrame {
         UIManager.put("TabbedPane.hasFullBorder", true);
         UIManager.put("TabbedPane.showTabSeparators", false);
 
+        // 主页
+        HomeUi homeUi = new HomeUi();
+        //收藏
+        FavoritesUi favoritesUi = new FavoritesUi();
+
+
+//        Object hoverColor = UIManager.get("TabbedPane.hoverColor");
+//        Object selectedBackground = UIManager.get("TabbedPane.selectedBackground");
+//        Object underlineColor = UIManager.get("TabbedPane.underlineColor");
+//        Object inactiveUnderlineColor = UIManager.get("TabbedPane.inactiveUnderlineColor");
+//        Object focusColor = UIManager.get("TabbedPane.focusColor");
         UIManager.put("TabbedPane.hoverColor", UIManager.get("TabbedPane.background"));
         UIManager.put("TabbedPane.selectedBackground", UIManager.get("TabbedPane.background"));
         UIManager.put("TabbedPane.underlineColor", UIManager.get("TabbedPane.background"));
@@ -77,18 +88,15 @@ public class MainFrame {
         // 首行为空
         leftPane.addTab("", new JLabel());
         leftPane.setEnabledAt(0, false);
-        // 主页
-        HomeUi homeUi = new HomeUi();
+
         leftPane.addTab("", homeUi.getIconNotSelected(), homeUi);
         leftPane.setSelectedIndex(1);
 
 //        leftPane.addTab("", new JLabel());
 //        leftPane.setEnabledAt(2, false);
 
-        //收藏
-        FavoritesUi favoritesUi = new FavoritesUi();
-        leftPane.addTab("", favoritesUi.getIconNotSelected(), favoritesUi);
 
+        leftPane.addTab("", favoritesUi.getIconNotSelected(), favoritesUi);
         JF.setVisible(true);
     }
 
@@ -98,8 +106,11 @@ public class MainFrame {
             @Override
             public void stateChanged(ChangeEvent e) {
                 Component select = tabbedPane.getSelectedComponent();
-                for (int index = 0; index < tabbedPane.getComponents().length; index++) {
-                    Component component = tabbedPane.getComponent(index);
+                for (Component component : tabbedPane.getComponents()) {
+                    int index = tabbedPane.indexOfComponent(component);
+                    if (index < 0) {
+                        continue;
+                    }
                     if (component instanceof ComponentIcon tmp) {
                         Icon icon = tmp.getIcon(select == component);
                         tabbedPane.setIconAt(index, icon);

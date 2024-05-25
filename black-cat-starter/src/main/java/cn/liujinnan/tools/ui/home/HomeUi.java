@@ -36,11 +36,20 @@ public class HomeUi extends JPanel implements ComponentIcon {
         UIManager.put("TabbedPane.showTabSeparators", true);
         UIManager.put("TabbedPane.hasFullBorder", true);
 
+        Object underlineColor = UIManager.get("TabbedPane.underlineColor");
+        UIManager.put("TabbedPane.underlineColor", UIManager.get("TabbedPane.background"));
+        UIManager.put("TabbedPane.hoverColor", UIManager.get("TabbedPane.focusColor"));
+        UIManager.put("TabbedPane.inactiveUnderlineColor", UIManager.get("TabbedPane.focusColor"));
+        UIManager.put("TabbedPane.selectedBackground", UIManager.get("TabbedPane.focusColor"));
+
         jTabbedPane = new JTabbedPane();
         jTabbedPane.setTabPlacement(JTabbedPane.LEFT);
         jTabbedPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        jTabbedPane.putClientProperty("TabbedPane.underlineColor", UIManager.get("TabbedPane.background"));
         this.add(jTabbedPane);
 
+        UIManager.put("TabbedPane.inactiveUnderlineColor", underlineColor);
+        UIManager.put("TabbedPane.underlineColor", underlineColor);
         showPlugin();
     }
 
