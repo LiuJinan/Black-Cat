@@ -6,6 +6,7 @@ import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
+import cn.liujinnan.tools.ui.component.ComponentIcon;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +22,7 @@ import java.util.function.IntConsumer;
  * @create: 2024-05-02 21:43
  **/
 @Slf4j
-public class HomeUi extends JPanel {
+public class HomeUi extends JPanel implements ComponentIcon {
 
     private JTabbedPane jTabbedPane;
 
@@ -97,7 +98,11 @@ public class HomeUi extends JPanel {
         }
     }
 
-    public Icon getIcon() {
+    @Override
+    public Icon getIcon(boolean selected) {
+        if (selected){
+            return  (Icon)PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME_FILL.getKey());
+        }
         return (Icon)PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME.getKey());
     }
 }

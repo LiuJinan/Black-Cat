@@ -5,6 +5,7 @@
 package cn.liujinnan.tools.ui.favorites;
 
 import cn.liujinnan.tools.constant.PropertiesEnum;
+import cn.liujinnan.tools.ui.component.ComponentIcon;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.awt.*;
  * @version 1.0
  * @date 2024-05-24 10:17
  */
-public class FavoritesUi extends JPanel {
+public class FavoritesUi extends JPanel implements ComponentIcon {
 
     public FavoritesUi() {
         init();
@@ -30,7 +31,16 @@ public class FavoritesUi extends JPanel {
         this.add(favoritesTabbedPane);
     }
 
-    public Icon getIcon() {
+    /**
+     *
+     * @param selected selected=true 被选中
+     * @return
+     */
+    @Override
+    public Icon getIcon(boolean selected) {
+        if (selected) {
+            return (Icon) PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_FAVORITES_FILL.getKey());
+        }
         return (Icon) PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_FAVORITES.getKey());
     }
 }

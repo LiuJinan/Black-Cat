@@ -6,6 +6,7 @@ package cn.liujinnan.tools.ui;
 
 import cn.liujinnan.tools.Application;
 import cn.liujinnan.tools.constant.PropertiesEnum;
+import cn.liujinnan.tools.ui.component.ComponentIcon;
 import cn.liujinnan.tools.ui.favorites.FavoritesUi;
 import cn.liujinnan.tools.ui.home.HomeUi;
 import cn.liujinnan.tools.ui.menu.MenuBarUi;
@@ -15,6 +16,8 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
@@ -68,6 +71,7 @@ public class MainFrame {
 
         // 左侧菜单选项卡
         JTabbedPane leftPane = new JTabbedPane();
+        changeIcon(leftPane);
         leftPane.setTabPlacement(JTabbedPane.LEFT);
         JF.setContentPane(leftPane);
         // 首行为空
@@ -75,24 +79,35 @@ public class MainFrame {
         leftPane.setEnabledAt(0, false);
         // 主页
         HomeUi homeUi = new HomeUi();
-        leftPane.addTab("", homeUi.getIcon(), homeUi);
+        leftPane.addTab("", homeUi.getIconNotSelected(), homeUi);
         leftPane.setSelectedIndex(1);
-//        leftPane.addChangeListener(new ChangeListener() {
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-// // todo 选中改变图标
-//            }
-//        });
 
 //        leftPane.addTab("", new JLabel());
 //        leftPane.setEnabledAt(2, false);
 
         //收藏
         FavoritesUi favoritesUi = new FavoritesUi();
-        leftPane.addTab("", favoritesUi.getIcon(), favoritesUi);
+        leftPane.addTab("", favoritesUi.getIconNotSelected(), favoritesUi);
+
         JF.setVisible(true);
     }
 
+
+    private static void changeIcon(JTabbedPane tabbedPane) {
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Component select = tabbedPane.getSelectedComponent();
+                for (int index = 0; index < tabbedPane.getComponents().length; index++) {
+                    Component component = tabbedPane.getComponent(index);
+                    if (component instanceof ComponentIcon tmp) {
+                        Icon icon = tmp.getIcon(select == component);
+                        tabbedPane.setIconAt(index, icon);
+                    }
+                }
+            }
+        });
+    }
 
     private static void setUpTheme() {
         //标题栏菜单
@@ -103,8 +118,8 @@ public class MainFrame {
         // https://www.formdev.com/flatlaf/themes/
 
 //        String themeName = "/themes/oneDark/one_dark.theme.json";
-//        String themeName = "/themes/expUi/expUI_light.theme.json";
-        String themeName = "/themes/expUi/expUI_dark.theme.json";
+        String themeName = "/themes/expUi/expUI_light.theme.json";
+//        String themeName = "/themes/expUi/expUI_dark.theme.json";
         IntelliJTheme.setup(Application.class.getResourceAsStream(themeName));
         PropertiesUtils instance = PropertiesUtils.getInstance();
 
