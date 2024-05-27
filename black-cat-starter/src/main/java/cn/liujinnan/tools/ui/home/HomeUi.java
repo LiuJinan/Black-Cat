@@ -45,7 +45,7 @@ public class HomeUi extends JPanel implements ComponentIcon {
         jTabbedPane = new JTabbedPane();
         jTabbedPane.setTabPlacement(JTabbedPane.LEFT);
         jTabbedPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        jTabbedPane.putClientProperty("TabbedPane.underlineColor", UIManager.get("TabbedPane.background"));
+        jTabbedPane.putClientProperty("JTabbedPane.minimumTabWidth", 180);
         this.add(jTabbedPane);
 
         UIManager.put("TabbedPane.inactiveUnderlineColor", underlineColor);

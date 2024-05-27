@@ -72,6 +72,10 @@ public class FavoritesCache {
                 && StringUtils.equals(className, e.getClassName()));
     }
 
+    public static List<FavoriteItem> getAll() {
+        return Lists.newArrayList(FAVORITE_ITEM_LIST);
+    }
+
     private static void saveFile() {
 
         // 写入文件
