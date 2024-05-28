@@ -82,7 +82,10 @@ public class MainFrame {
 
         // 左侧菜单选项卡
         JTabbedPane leftPane = new JTabbedPane();
+        leftPane.putClientProperty("JTabbedPane.showTabSeparators", false);
+
         changeIcon(leftPane);
+        reloadFavorites(leftPane);
         leftPane.setTabPlacement(JTabbedPane.LEFT);
         JF.setContentPane(leftPane);
         // 首行为空
@@ -92,12 +95,25 @@ public class MainFrame {
         leftPane.addTab("", homeUi.getIconNotSelected(), homeUi);
         leftPane.setSelectedIndex(1);
 
+
 //        leftPane.addTab("", new JLabel());
 //        leftPane.setEnabledAt(2, false);
 
 
         leftPane.addTab("", favoritesUi.getIconNotSelected(), favoritesUi);
         JF.setVisible(true);
+    }
+
+
+    private static void reloadFavorites(JTabbedPane tabbedPane) {
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (tabbedPane.getSelectedComponent() instanceof FavoritesUi favoritesUi) {
+                    favoritesUi.reload();
+                }
+            }
+        });
     }
 
 

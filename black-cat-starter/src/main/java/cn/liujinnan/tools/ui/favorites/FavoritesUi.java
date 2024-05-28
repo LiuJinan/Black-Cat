@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
  */
 public class FavoritesUi extends JPanel implements ComponentIcon {
 
+    private JTabbedPane favoritesTabbedPane;
+
     public FavoritesUi() {
         init();
     }
@@ -38,18 +40,23 @@ public class FavoritesUi extends JPanel implements ComponentIcon {
         UIManager.put("TabbedPane.underlineColor", UIManager.get("TabbedPane.background"));
         UIManager.put("TabbedPane.inactiveUnderlineColor", UIManager.get("TabbedPane.focusColor"));
 
-        JTabbedPane favoritesTabbedPane = new JTabbedPane();
+        favoritesTabbedPane = new JTabbedPane();
         favoritesTabbedPane.setTabPlacement(JTabbedPane.LEFT);
         favoritesTabbedPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         favoritesTabbedPane.putClientProperty("JTabbedPane.minimumTabWidth", 180);
         this.add(favoritesTabbedPane);
 
+        reload();
+    }
+
+    public void reload() {
+        favoritesTabbedPane.removeAll();
         List<PluginClassLoader> pluginClassLoaderList = PluginManager.getInstance().getPluginClassLoaderList();
         Map<String, Map<String, PluginItem>> collect = pluginClassLoaderList.stream()
                 .collect(Collectors.toMap(
                         e -> e.getPluginJarInfo().getJarName(),
                         e -> e.getPluginJarInfo().getPluginItemList().stream().collect(Collectors.toMap(PluginItem::getClassName, i -> i))));
-        FavoritesCache.getAll().forEach( e -> {
+        FavoritesCache.getAll().forEach(e -> {
 
             Map<String, PluginItem> pluginItemMap = collect.get(e.getJarName());
             if (Objects.isNull(pluginItemMap) || pluginItemMap.isEmpty()) {
@@ -61,11 +68,9 @@ public class FavoritesUi extends JPanel implements ComponentIcon {
             }
             favoritesTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getJComponent());
         });
-
     }
 
     /**
-     *
      * @param selected selected=true 被选中
      * @return
      */
