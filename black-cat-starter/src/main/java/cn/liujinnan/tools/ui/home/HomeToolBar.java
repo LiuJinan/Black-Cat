@@ -2,11 +2,14 @@ package cn.liujinnan.tools.ui.home;
 
 import cn.liujinnan.tools.cache.FavoritesCache;
 import cn.liujinnan.tools.constant.LanguageEnum;
+import cn.liujinnan.tools.plugin.domain.PluginComponentMapping;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,10 +17,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +33,11 @@ public class HomeToolBar extends JPanel {
     private final JToolBar jToolBar = new JToolBar();
 
     /**
+     * className 与 JComponent 映射
+     */
+    private final List<PluginComponentMapping> mappings;
+
+    /**
      * 当前工具栏对应的jar插件
      */
     private final PluginJarInfo pluginJarInfo;
@@ -40,14 +46,16 @@ public class HomeToolBar extends JPanel {
      */
     private final JTabbedPane itemPane;
 
-    public HomeToolBar(PluginJarInfo pluginJarInfo, JTabbedPane itemPane) {
+    public HomeToolBar(PluginJarInfo pluginJarInfo, JTabbedPane itemPane,
+                       List<PluginComponentMapping> mappings) {
         this.pluginJarInfo = pluginJarInfo;
         this.itemPane = itemPane;
+        this.mappings = mappings;
         init();
     }
 
-    private void init(){
-        this.setLayout(new GridLayout(1,1));
+    private void init() {
+        this.setLayout(new GridLayout(1, 1));
         this.add(jToolBar);
         // 工具栏背景色加深10%
         jToolBar.setBackground(ColorUtils.darkenColor(jToolBar.getBackground(), 0.1));
@@ -65,21 +73,20 @@ public class HomeToolBar extends JPanel {
         FlatSVGIcon updateSvg = new FlatSVGIcon("img/default/toolbar/update.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
         update.setIcon(updateSvg);
         update.setToolTipText(instance.getValue(LanguageEnum.HOME_PLUGIN_TOOLBAR_UPDATE_BTN_TIP.getKey()));
-        //        update.setIcon(new FlatSearchIcon());
-//        update.putClientProperty("JButton.buttonType", "help");
-//        UIManager.put("JButton.buttonType", "help");
-
-//        update.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_ROUND_RECT);
 
         jToolBar.add(update);
+
+        Map<String, PluginComponentMapping> classNameComponentMap = mappings.stream().collect(Collectors.toMap(PluginComponentMapping::getClassName, e -> e));
         update.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
                 List<Component> existList = Arrays.asList(itemPane.getComponents());
+
                 pluginItemList.forEach(pluginItem -> {
-                    if (!existList.contains(pluginItem.getJComponent())) {
-                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getJComponent());
+                    PluginComponentMapping mapping = classNameComponentMap.get(pluginItem.getClassName());
+                    if (!existList.contains(mapping.getComponent())) {
+                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), mapping.getComponent());
                     }
                 });
             }
@@ -95,42 +102,48 @@ public class HomeToolBar extends JPanel {
 
         FlatSVGIcon favoritesFillSvg = new FlatSVGIcon("img/default/toolbar/favorites-fill.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
 
-        Map<Component, PluginItem> pluginItemMap = pluginJarInfo.getPluginItemList().stream().collect(Collectors.toMap(PluginItem::getJComponent, e -> e));
+//        Map<Component, PluginItem> pluginItemMap = pluginJarInfo.getPluginItemList().stream().collect(Collectors.toMap(PluginItem::getJComponent, e -> e));
 
         // 切换插件，调整显示按钮颜色
         itemPane.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
 
-                Component selectedComponent = itemPane.getSelectedComponent();
-
-                PluginItem pluginItem = pluginItemMap.get(selectedComponent);
-                Optional.ofNullable(pluginItem).ifPresent(item -> {
-                    boolean exist = FavoritesCache.exist(pluginJarInfo.getJarName(), item.getClassName());
+                JComponent selectedComponent = (JComponent) itemPane.getSelectedComponent();
+                Map<JComponent, String> componentClassNameMap = mappings.stream().collect(
+                        Collectors.toMap(PluginComponentMapping::getComponent, PluginComponentMapping::getClassName));
+                String className = componentClassNameMap.get(selectedComponent);
+                if (StringUtils.isNotBlank(className)) {
+                    boolean exist = FavoritesCache.exist(pluginJarInfo.getJarName(), className);
                     if (exist) {
                         favorites.setIcon(favoritesFillSvg);
-                    }else {
+                    } else {
                         favorites.setIcon(favoritesSvg);
                     }
-                });
+                }
             }
         });
         // 点击收藏按钮
         favorites.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Component selectedComponent = itemPane.getSelectedComponent();
-                PluginItem pluginItem = pluginItemMap.get(selectedComponent);
+                JComponent selectedComponent = (JComponent)itemPane.getSelectedComponent();
+                Map<JComponent, String> componentClassNameMap = mappings.stream().collect(
+                        Collectors.toMap(PluginComponentMapping::getComponent, PluginComponentMapping::getClassName));
+                String className = componentClassNameMap.get(selectedComponent);
+                if (StringUtils.isBlank(className)) {
+                    return;
+                }
                 // 收藏
                 if (favoritesSvg == favorites.getIcon()) {
                     favorites.setIcon(favoritesFillSvg);
-                    FavoritesCache.add(pluginJarInfo.getJarName(), pluginItem.getClassName());
+                    FavoritesCache.add(pluginJarInfo.getJarName(), className);
                     return;
                 }
                 // 移除收藏
                 if (favoritesFillSvg == favorites.getIcon()) {
                     favorites.setIcon(favoritesSvg);
-                    FavoritesCache.remove(pluginJarInfo.getJarName(), pluginItem.getClassName());
+                    FavoritesCache.remove(pluginJarInfo.getJarName(), className);
                 }
             }
         });

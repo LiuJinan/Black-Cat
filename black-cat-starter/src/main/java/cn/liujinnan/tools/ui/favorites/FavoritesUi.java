@@ -66,7 +66,7 @@ public class FavoritesUi extends JPanel implements ComponentIcon {
             if (Objects.isNull(pluginItem)) {
                 return;
             }
-            favoritesTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getJComponent());
+            favoritesTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
         });
     }
 

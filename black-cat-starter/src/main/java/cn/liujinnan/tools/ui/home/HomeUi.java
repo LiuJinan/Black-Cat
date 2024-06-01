@@ -4,14 +4,17 @@ import cn.liujinnan.tools.constant.LanguageEnum;
 import cn.liujinnan.tools.constant.PropertiesEnum;
 import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
+import cn.liujinnan.tools.plugin.domain.PluginComponentMapping;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.ui.component.ComponentIcon;
 import cn.liujinnan.tools.utils.PropertiesUtils;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.IntConsumer;
@@ -85,33 +88,43 @@ public class HomeUi extends JPanel implements ComponentIcon {
                 itemPane.putClientProperty("JTabbedPane.tabClosable", true);
                 itemPane.putClientProperty("JTabbedPane.tabCloseCallback", (IntConsumer) itemPane::remove);
                 itemPane.putClientProperty("JTabbedPane.minimumTabWidth", 100);
-                // 设置工具栏
-                HomeToolBar toolBar = new HomeToolBar(pluginJarInfo, itemPane);
-                itemPanel.add(toolBar, BorderLayout.NORTH);
-                // 设置标签页
-                itemPanel.add(itemPane, BorderLayout.CENTER);
+
+                List<PluginComponentMapping> mappings = Lists.newArrayList();
                 try {
                     List<PluginItem> pluginItemList = pluginJarInfo.getPluginItemList();
+                    pluginItemList.sort(Comparator.comparing(e -> e.getPlugin().order()));
                     pluginItemList.forEach(pluginItem -> {
-                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), pluginItem.getJComponent());
+                        JComponent jComponent = pluginItem.getPlugin().getJComponent();
+                        PluginComponentMapping mapping = new PluginComponentMapping();
+                        mapping.setJarName(pluginJarInfo.getJarName());
+                        mapping.setClassName(pluginItem.getClassName());
+                        mapping.setComponent(jComponent);
+                        mappings.add(mapping);
+                        itemPane.addTab(pluginItem.getComponentName(), pluginItem.getIcon(), jComponent);
                         log.info("load : jarName={} className={}", pluginJarInfo.getJarName(), pluginItem.getClassName());
                     });
+
                 } catch (Exception e) {
                     log.error("Failed to load plug-in item. jar={}", pluginJarInfo.getJarName(), e);
                 }
+                // 设置工具栏
+                HomeToolBar toolBar = new HomeToolBar(pluginJarInfo, itemPane, mappings);
+                itemPanel.add(toolBar, BorderLayout.NORTH);
+                // 设置标签页
+                itemPanel.add(itemPane, BorderLayout.CENTER);
             });
             //默认选中第二行
             jTabbedPane.setSelectedIndex(1);
         } catch (Exception e) {
-           log.error("Failed to display plugin list.", e);
+            log.error("Failed to display plugin list.", e);
         }
     }
 
     @Override
     public Icon getIcon(boolean selected) {
-        if (selected){
-            return  (Icon)PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME_FILL.getKey());
+        if (selected) {
+            return (Icon) PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME_FILL.getKey());
         }
-        return (Icon)PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME.getKey());
+        return (Icon) PropertiesUtils.getInstance().getObject(PropertiesEnum.SVG_HOME.getKey());
     }
 }

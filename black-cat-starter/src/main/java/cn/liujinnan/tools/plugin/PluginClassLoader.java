@@ -140,7 +140,6 @@ public class PluginClassLoader extends URLClassLoader {
                 pluginItem.setIcon(getImageIcon(pluginComponent.icon(), jarFile));
                 Plugin plugin = (Plugin) obj;
                 pluginItem.setPlugin(plugin);
-                pluginItem.setJComponent(plugin.getJComponent());
                 return pluginItem;
             }
         } catch (Exception e) {
