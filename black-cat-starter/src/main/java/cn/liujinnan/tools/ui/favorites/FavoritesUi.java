@@ -60,10 +60,12 @@ public class FavoritesUi extends JPanel implements ComponentIcon {
 
             Map<String, PluginItem> pluginItemMap = collect.get(e.getJarName());
             if (Objects.isNull(pluginItemMap) || pluginItemMap.isEmpty()) {
+                FavoritesCache.remove(e.getJarName(), e.getClassName());
                 return;
             }
             PluginItem pluginItem = pluginItemMap.get(e.getClassName());
             if (Objects.isNull(pluginItem)) {
+                FavoritesCache.remove(e.getJarName(), e.getClassName());
                 return;
             }
             favoritesTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
