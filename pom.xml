@@ -126,6 +126,13 @@
                 <version>2.0.50</version>
             </dependency>
 
+            <!-- Chromium Embedded Framework -->
+            <dependency>
+                <groupId>me.friwi</groupId>
+                <artifactId>jcefmaven</artifactId>
+                <version>122.1.10</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
