@@ -64,6 +64,20 @@
         <dependency>
             <groupId>cn.liujinnan.tools</groupId>
             <artifactId>black-cat-plugin</artifactId>
+            <exclusions>
+                <exclusion>
+                        <groupId>com.formdev</groupId>
+                        <artifactId>flatlaf</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.formdev</groupId>
+                    <artifactId>flatlaf-extras</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.formdev</groupId>
+                    <artifactId>flatlaf-intellij-themes</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--  markdown -->

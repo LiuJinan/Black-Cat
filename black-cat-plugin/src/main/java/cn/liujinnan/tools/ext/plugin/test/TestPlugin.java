@@ -6,6 +6,7 @@ package cn.liujinnan.tools.ext.plugin.test;
 
 import cn.liujinnan.tools.ext.plugin.Plugin;
 import cn.liujinnan.tools.ext.plugin.annotation.PluginComponent;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -24,6 +25,10 @@ public class TestPlugin {
     }
 
     public static void runTest(Plugin plugin, int width, int height){
+        try {
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        } catch (Exception ignored) {
+        }
         if (Objects.isNull(plugin)) {
             return;
         }
