@@ -10,6 +10,7 @@ import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.ui.component.ComponentIcon;
+import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 
 import javax.swing.*;
@@ -68,7 +69,14 @@ public class FavoritesUi extends JPanel implements ComponentIcon {
                 FavoritesCache.remove(e.getJarName(), e.getClassName());
                 return;
             }
-            favoritesTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
+            JPanel jPanel = new JPanel();
+            jPanel.setLayout(new BorderLayout(10, 0));
+            jPanel.add(pluginItem.getPlugin().getJComponent(), BorderLayout.CENTER);
+            JLabel jLabel = new JLabel(e.getJarName());
+            jLabel.setBackground(ColorUtils.darkenColor(jLabel.getBackground(), 0.5));
+//            jLabel.set
+            jPanel.add(jLabel, BorderLayout.SOUTH);
+            favoritesTabbedPane.addTab(pluginItem.getComponentName(), jPanel);
         });
     }
 

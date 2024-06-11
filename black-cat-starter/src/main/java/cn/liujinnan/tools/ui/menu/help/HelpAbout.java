@@ -6,6 +6,7 @@ package cn.liujinnan.tools.ui.menu.help;
 
 import cn.liujinnan.tools.constant.LanguageEnum;
 import cn.liujinnan.tools.ui.MainFrame;
+import cn.liujinnan.tools.ui.component.HtmlPanel;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import cn.liujinnan.tools.utils.markdown.MdToHtmlUtil;
 import lombok.Setter;
@@ -56,17 +57,25 @@ public class HelpAbout extends JMenuItem {
                 public void run() {
                     // 弹出框位于主窗体中间
                     jFrame.setLocationRelativeTo(null);
-                    jFrame.setSize(300, 400);
                     // 中间展示
                     Point location = jFrame.getLocation();
                     jFrame.setLocation((int)location.getX()-(jFrame.getWidth()/2), (int)location.getY()-(jFrame.getHeight()/2));
 
-                    JEditorPane editorPane = new JEditorPane();
-                    editorPane.setContentType("text/html");
-                    // TODO: 2024/5/13 语言， 
-                    editorPane.setText(MdToHtmlUtil.mdToHtml("/about.md"));
-                    editorPane.setEditable(false);
-                    jFrame.add(editorPane);
+//                    JEditorPane editorPane = new JEditorPane();
+//                    editorPane.setContentType("text/html");
+//                    // TODO: 2024/5/13 语言，
+//                    editorPane.setText(MdToHtmlUtil.mdToHtml("/about.md"));
+//                    editorPane.setEditable(false);
+//                    jFrame.add(editorPane);
+
+                    try {
+                        String[] args = {};
+                        HtmlPanel htmlPanel = new HtmlPanel("file:///C:/Users/Administrator/Desktop/abc.html", false, false, args);
+                        Component browerUi = htmlPanel.getBrowerUi();
+                        jFrame.getContentPane().add(browerUi, BorderLayout.CENTER);
+                        jFrame.pack();
+                    } catch (Exception e) {
+                    }
                 }
             });
         } catch (Exception e) {
