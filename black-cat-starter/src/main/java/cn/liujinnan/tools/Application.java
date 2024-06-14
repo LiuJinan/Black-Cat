@@ -40,8 +40,8 @@ public class Application {
         // https://www.formdev.com/flatlaf/themes/
 
 //        String themeName = "/themes/oneDark/one_dark.theme.json";
-        String themeName = "/themes/expUi/expUI_light.theme.json";
-//        String themeName = "/themes/expUi/expUI_dark.theme.json";
+        String themeName = "/themes/expUI/expUI_light.theme.json";
+//        String themeName = "/themes/expUI/expUI_dark.theme.json";
         IntelliJTheme.setup(Application.class.getResourceAsStream(themeName));
         PropertiesUtils instance = PropertiesUtils.getInstance();
 
