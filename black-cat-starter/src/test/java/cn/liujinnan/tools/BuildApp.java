@@ -59,15 +59,17 @@ public class BuildApp {
      */
     private static void buildApp(String jrePath, String type, String buildFolder){
         // jpackage --type app-image --input blackCat --runtime-image out --name BlackCat --main-jar BlackCat.jar --icon logo.png --app-version 1.0.0 --vendor liujinnan --copyright liujinnan.cn --description tools --dest exe
-        String cmd = "jpackage --type #type --input #jarFolder --runtime-image #jrePath --name #name --main-jar #jarName --app-version #version --vendor liujinnan --copyright liujinnan.cn --description tools --dest #dest";
+        String cmd = "jpackage --type #type --input #jarFolder --runtime-image #jrePath --name #name --main-jar #jarName --icon #icon  --app-version #version --vendor liujinnan --copyright liujinnan.cn --description tools --dest #dest";
         File out = new File(buildFolder + File.separator + type);
         out.mkdirs();
+        String icoPath = PROJECT_PATH + "/black-cat-starter/src/main/resources/img/logo.ico";
         cmd = cmd
                 .replace("#type", "app-image")
                 .replace("#jarFolder", getJarFileFolder())
                 .replace("#jrePath", jrePath)
                 .replace("#name", "BlackCat")
                 .replace("#jarName", JAR_NAME)
+                .replace("#icon ", icoPath)
                 .replace("#version", System.getProperty("version"))
                 .replace("#dest", buildFolder+File.separator+type);
         System.out.println(cmd);
