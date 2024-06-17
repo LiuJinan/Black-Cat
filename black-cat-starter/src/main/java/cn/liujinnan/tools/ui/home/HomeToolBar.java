@@ -8,7 +8,6 @@ import cn.liujinnan.tools.plugin.domain.PluginJarInfo;
 import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -17,8 +16,9 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -102,16 +102,19 @@ public class HomeToolBar extends JPanel {
 
         FlatSVGIcon favoritesFillSvg = new FlatSVGIcon("img/default/toolbar/favorites-fill.svg", TOOL_BUTTON_WIDTH_HEIGHT, TOOL_BUTTON_WIDTH_HEIGHT);
 
-//        Map<Component, PluginItem> pluginItemMap = pluginJarInfo.getPluginItemList().stream().collect(Collectors.toMap(PluginItem::getJComponent, e -> e));
+
+        Map<JComponent, String> componentClassNameMap = mappings.stream().collect(
+                Collectors.toMap(PluginComponentMapping::getComponent, PluginComponentMapping::getClassName));
+        String className = componentClassNameMap.get((JComponent) itemPane.getSelectedComponent());
+        if (StringUtils.isNotBlank(className) && FavoritesCache.exist(pluginJarInfo.getJarName(), className)) {
+            favorites.setIcon(favoritesFillSvg);
+        }
 
         // 切换插件，调整显示按钮颜色
         itemPane.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-
                 JComponent selectedComponent = (JComponent) itemPane.getSelectedComponent();
-                Map<JComponent, String> componentClassNameMap = mappings.stream().collect(
-                        Collectors.toMap(PluginComponentMapping::getComponent, PluginComponentMapping::getClassName));
                 String className = componentClassNameMap.get(selectedComponent);
                 if (StringUtils.isNotBlank(className)) {
                     boolean exist = FavoritesCache.exist(pluginJarInfo.getJarName(), className);
