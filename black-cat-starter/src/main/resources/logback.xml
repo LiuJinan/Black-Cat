@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <property name="appName" value="BlackCat"/>
+    <property name="fileName" value="back-cat"/>
+
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/${appName}/${fileName}.log</file>
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>log/${app-name}/${filename}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>-->
+<!--        </rollingPolicy>-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>2MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <!-- 这里的pattern不要格式换或者换行 -->
+            <pattern>[%date{ISO8601}] [%level] %logger{80} ${appName} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%date{ISO8601}] [%level] %logger{80} ${appName} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 忽略日志输出-->
+    <logger name="sun.rmi" level="error"/>
+    <logger name="sun.net" level="error"/>
+    <logger name="javax.management" level="error"/>
+    <logger name="org.redisson" level="error"/>
+    <logger name="com.zaxxer" level="error"/>
+
+    <!-- 日志输出级别 -->
+    <root level="INFO" additivity="false">
+        <appender-ref ref="consoleAppender"/>
+        <appender-ref ref="fileAppender"/>
+    </root>
+
+</configuration>
