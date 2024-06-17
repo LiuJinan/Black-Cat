@@ -2,8 +2,12 @@ package cn.liujinnan.tools.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 
 /**
@@ -33,5 +37,40 @@ public class FileUtils {
             log.error("Get file hashcode error, file={}", filePath, e);
         }
         return null;
+    }
+
+    /**
+     * Deletes the specified folder and all the files and sub folders it contains
+     *
+     * @param folderPath The path to the folder, for example "C:\\myFolder" or "/home/user/myFolder"
+     * @return Returns true if the folder was successfully deleted; returns false if the folder does not exist or cannot be deleted.
+     */
+    public static boolean deleteFolder(String folderPath) {
+        Path path = Paths.get(folderPath);
+        if (!Files.exists(path)) {
+            return false;
+        }
+
+        try {
+
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    file.toFile().delete();
+//                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            return true;
+        } catch (IOException e) {
+            log.error("Error deleting folder. ", e);
+            return false;
+        }
     }
 }

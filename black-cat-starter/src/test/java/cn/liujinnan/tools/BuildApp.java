@@ -1,5 +1,6 @@
 package cn.liujinnan.tools;
 
+import cn.liujinnan.tools.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -37,11 +38,12 @@ public class BuildApp {
         List<String> modules = getModules();
 
         //del old folder
-
+        String buildRootPath = PROJECT_PATH + File.separator + "build";
+        FileUtils.deleteFolder(buildRootPath);
 
         // Create a folder
         String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        String buildPath = PROJECT_PATH + File.separator + "build" + File.separator + System.getProperty("version") + "_" + format;
+        String buildPath = buildRootPath + File.separator + System.getProperty("version") + "_" + format;
         File buildFolder = new File(buildPath);
         buildFolder.mkdirs();
 
