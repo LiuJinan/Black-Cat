@@ -4,8 +4,8 @@
 
 package cn.liujinnan.tools.cache;
 
-import cn.liujinnan.tools.constant.BlackCatConstants;
 import cn.liujinnan.tools.cache.domain.FavoriteItem;
+import cn.liujinnan.tools.constant.BlackCatConstants;
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class FavoritesCache {
     public static void remove(String jarName, String className) {
         List<FavoriteItem> list = FAVORITE_ITEM_LIST.stream()
                 .filter(e -> StringUtils.equals(jarName, e.getJarName())
-                && StringUtils.equals(className, e.getClassName())).toList();
+                        && StringUtils.equals(className, e.getClassName())).toList();
         if (!list.isEmpty()) {
             FAVORITE_ITEM_LIST.removeAll(list);
             saveFile();
@@ -68,7 +68,7 @@ public class FavoritesCache {
     }
 
     public static boolean exist(String jarName, String className) {
-       return FAVORITE_ITEM_LIST.stream().anyMatch(e -> StringUtils.equals(jarName, e.getJarName())
+        return FAVORITE_ITEM_LIST.stream().anyMatch(e -> StringUtils.equals(jarName, e.getJarName())
                 && StringUtils.equals(className, e.getClassName()));
     }
 

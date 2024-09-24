@@ -10,6 +10,7 @@ import cn.liujinnan.tools.plugin.PluginClassLoader;
 import cn.liujinnan.tools.plugin.PluginManager;
 import cn.liujinnan.tools.plugin.domain.PluginItem;
 import cn.liujinnan.tools.ui.component.ComponentIcon;
+import cn.liujinnan.tools.utils.ColorUtils;
 import cn.liujinnan.tools.utils.PropertiesUtils;
 
 import javax.swing.*;
@@ -68,7 +69,14 @@ public class FavoritesUi extends JPanel implements ComponentIcon {
                 FavoritesCache.remove(e.getJarName(), e.getClassName());
                 return;
             }
-            favoritesTabbedPane.addTab(pluginItem.getComponentName(), pluginItem.getPlugin().getJComponent());
+            JPanel footnote = new JPanel(new BorderLayout());
+            // 背景色加深10%
+            footnote.setBackground(ColorUtils.darkenColor(this.getBackground(), 0.1));
+            footnote.add(pluginItem.getPlugin().getJComponent(), BorderLayout.CENTER);
+            // todo footnote 左侧新增当前插件使用介绍
+            // todo jarName 点击弹开插件介绍
+            footnote.add(new JLabel(e.getJarName(), SwingConstants.RIGHT), BorderLayout.SOUTH);
+            favoritesTabbedPane.addTab(pluginItem.getComponentName(), footnote);
         });
     }
 
