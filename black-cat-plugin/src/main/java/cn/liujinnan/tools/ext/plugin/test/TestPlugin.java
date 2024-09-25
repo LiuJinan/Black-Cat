@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.Objects;
 
 /**
@@ -48,7 +49,14 @@ public class TestPlugin {
         }
         ImageIcon imageIcon = null;
         if (StringUtils.isNotBlank(annotation.icon())) {
-            ImageIcon tmp = new ImageIcon("/" + annotation.icon());
+            String iconPath = "/" + annotation.icon();
+            ImageIcon tmp = new ImageIcon(iconPath);
+            if (!Objects.equals(MediaTracker.COMPLETE, tmp.getImageLoadStatus())) {
+                URL url = TestPlugin.class.getResource(iconPath);
+                if (Objects.nonNull(url)) {
+                    tmp = new ImageIcon(url);
+                }
+            }
             Image scaledInstance = tmp.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
             imageIcon = new ImageIcon(scaledInstance);
         }
